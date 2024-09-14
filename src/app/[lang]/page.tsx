@@ -1,3 +1,4 @@
+import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import { getDictionary } from '@/dictionaries'
 import { cn } from '@/lib/utils'
@@ -32,10 +33,7 @@ export default async function Home({ params: { lang } }: Pages) {
       <div className="flex flex-1 flex-col items-center justify-center">
         <h1 className="mt-10 text-center text-5xl font-bold text-gray-800">
           {dictionary.landingPage.title}
-          <span className="pointer-events-none text-center text-5xl font-bold text-muted-foreground">
-            <span className="text-primary"> Readme</span>
-            <span className="text-muted-foreground">Gen</span>
-          </span>
+          <Logo />
         </h1>
         <p className="mt-4 text-center text-lg text-gray-600">
           {dictionary.landingPage.description}
