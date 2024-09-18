@@ -4,8 +4,12 @@ import { Pages } from '@/types/pages'
 import { Suspense } from 'react'
 import { RepositoryListSkeleton } from '@/components/dashboard/repository-list/skeleton'
 import { DashboardHeader } from '@/components/dashboard/header'
+import { MarkdownEditor } from '@/components/dashboard/markdown-editor'
+import { RepositoryForm } from '@/components/dashboard/repository-form'
 
 export default async function Dashboard({ searchParams: { repo } }: Pages) {
+  const hasSelectedRepo = Boolean(repo)
+
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[280px_1fr] lg:grid-cols-[340px_1fr]">
       <div className="fixed z-10 flex h-dvh w-full flex-col items-center justify-center gap-2 bg-white md:hidden md:opacity-0">
@@ -41,9 +45,19 @@ export default async function Dashboard({ searchParams: { repo } }: Pages) {
         <DashboardHeader />
 
         {/* <!-- Main Section --> */}
-        <main className="grid flex-1 grid-cols-1 bg-gray-50 p-4 xl:grid-cols-2">
-          <div className="bg-red-400"></div>
-          <div className="bg-green-400"></div>
+        <main className="grid flex-1 grid-cols-1 gap-4 bg-gray-50 p-4 xl:grid-cols-[550px_1fr]">
+          {hasSelectedRepo ? (
+            <>
+              <RepositoryForm />
+              <MarkdownEditor />
+            </>
+          ) : (
+            <div className="col-span-2 flex items-center justify-center">
+              <h1 className="text-center text-2xl text-zinc-900">
+                Selecione um repositório
+              </h1>
+            </div>
+          )}
         </main>
       </div>
     </div>

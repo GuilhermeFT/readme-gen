@@ -13,10 +13,10 @@ type TooltipProviderProps = {
 export const TooltipWrapper = ({ children, content }: TooltipProviderProps) => {
   return (
     <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger>{children}</TooltipTrigger>
-        <TooltipContent>
-          <p>{content}</p>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger type="button">{children}</TooltipTrigger>
+        <TooltipContent className="max-w-56">
+          <p className="text-pretty">{content}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
