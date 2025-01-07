@@ -7,7 +7,9 @@ export const listAuthenticatedUserRepositories = async () => {
     return null
   }
 
-  const { data } = await octokit.rest.repos.listForAuthenticatedUser({})
+  const { data } = await octokit.rest.repos.listForAuthenticatedUser({
+    type: 'all',
+  })
 
   return data
 }

@@ -20,7 +20,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     async session({ session, token }) {
-      session.accessToken = token.accessToken
+      session.accessToken = token.accessToken as string
       return session
     },
   },
