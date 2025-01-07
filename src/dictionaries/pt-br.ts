@@ -13,6 +13,8 @@ const ptBR: Dictionary = {
       'Gere automaticamente arquivos README.md profissionais para seus repositórios GitHub',
     buttonTitle: 'Começar',
     copyright: 'Todos os direitos reservados',
+
+    featuresTitle: 'Por que ReadmeGen?',
     features: [
       {
         title: 'Economize Tempo',
@@ -30,6 +32,48 @@ const ptBR: Dictionary = {
           'Basta conectar seu repositório GitHub e deixar a mágica acontecer.',
       },
     ],
+  },
+
+  dashboardPage: {
+    desktopOnly: 'Use no desktop para uma melhor experiência',
+    title: 'Painel de Controle',
+    yourRepositories: 'Seus Repositórios',
+    selectRepository: 'Selecione um repositório para começar',
+
+    repositoryForm: {
+      title: 'Informações do Repositório',
+      repositoryDescriptionLabel: 'Descreva seu repositório',
+      repositoryDescriptionPlaceholder:
+        'Ex. Este repositório é uma aplicação web que permite ao usuário criar e compartilhar memes engraçados.',
+
+      repositoryThumbLabel: 'Adicionar uma imagem de capa?',
+      repositoryThumbUrlLabel: 'URL da imagem de capa',
+      repositoryThumbUrlPlaceholder: 'Ex. https://example.com/image.jpg',
+      submitButton: 'Gerar README',
+      submittingButton: 'Gerando README...',
+
+      repoInfo: {
+        name: 'Nome do Repositório:',
+        description: 'Descrição do Repositório:',
+        languages: 'Linguagens',
+      },
+    },
+
+    markdownEditor: {
+      buttonCode: 'Código',
+      buttonPreview: 'Preview',
+      downloadButton: 'Baixar README',
+      copyButton: 'Copiar Markdown',
+      downloadSuccess: 'README baixado com sucesso!',
+      copySuccess: 'Markdown copiado com sucesso!',
+    },
+
+    messageErrors: {
+      excerptRequired: 'A descrição do repositório é obrigatória',
+      thumbRequired: 'A URL da imagem de capa é obrigatória',
+      generic: 'Algo deu errado. Por favor, tente novamente.',
+      errorCodeOne: 'Estamos trabalhando nisso, tente novamente mais tarde.',
+    },
   },
 }
 

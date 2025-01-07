@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1 align="center">readme-gen</h1>
 
-## Getting Started
+## 🔎 About the Project
+This project is a README generator for GitHub repositories. It was developed to help users create project documentation quickly and efficiently, ensuring that all important aspects are covered. With a user-friendly and easy-to-use interface, it automates the process of creating README.md files, allowing developers to focus on what really matters: developing their applications.
 
-First, run the development server:
+## 🧪 Technologies
+- TypeScript
+- CSS
+- JavaScript
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 How to Run
+To clone and run the project locally, follow the instructions below:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository:
+   ```
+   git clone https://github.com/GuilhermeFT/readme-gen.git
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2. Navigate to the project directory:
+   ```
+   cd readme-gen
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. Install the dependencies:
+   ```
+   npm install
+   ```
 
-## Learn More
+4. Start the project:
+   ```
+   npm start
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+Now you can access the README generator in your browser and start creating your README.md files!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing 🤝
+Contributions to this project are welcome! Please follow the steps below:
+1. Clone the repository (`git clone https://github.com/GuilhermeFT/readme-gen`);
+2. Create a new branch (`git checkout -b feature/branch`);
+3. Make your changes and commit them (`git commit -m 'feat: add new feature'`);
+4. Push to the branch (`git push origin feature/branch`);
+5. Open a Pull Request.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License 📄
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
