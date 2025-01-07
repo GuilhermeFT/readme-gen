@@ -44,7 +44,6 @@ export const generateReadme = async (options: GenerateReadmeOptions) => {
   if (!process.env.OPENAI_API_KEY) {
     throw new Error('OpenAI API key is missing. Code: #1')
   }
-  console.log('test', process.env.OPENAI_API_KEY)
 
   const result = await generateReadmeWithGpt(options.repository, options.lang)
 

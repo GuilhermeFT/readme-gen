@@ -89,8 +89,6 @@ export const RepositoryForm = ({
     } catch (e) {
       const error = e as Error
 
-      console.log(error.message)
-
       if (error.message.includes('#1')) {
         toast.error(dictionary.messageErrors.errorCodeOne)
       } else {
