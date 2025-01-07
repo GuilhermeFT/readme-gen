@@ -56,7 +56,6 @@ export const middleware = auth((request: NextRequest) => {
       `/${locale}`,
       '',
     )
-    console.log('aqui')
 
     return NextResponse.redirect(request.nextUrl)
   } */

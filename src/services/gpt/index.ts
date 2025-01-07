@@ -1,11 +1,12 @@
 'use server'
 
 import { getOpenAiInstance } from '@/lib/openai'
+import { Locales } from '@/types/locales'
 import { Repository } from '@/types/repositories'
 
 const openai = getOpenAiInstance()
 
-const getsFilesToUnderstandProject = async (fileList: string[]) => {
+/* const getsFilesToUnderstandProject = async (fileList: string[]) => {
   const response = await openai.chat.completions.create({
     messages: [
       {
@@ -28,9 +29,12 @@ const getsFilesToUnderstandProject = async (fileList: string[]) => {
       ?.split(',')
       .map((file) => file.trim()) || []
   )
-}
+} */
 
-export const generateReadmeWithGpt = async (data: Repository) => {
+export const generateReadmeWithGpt = async (
+  data: Repository,
+  lang: Locales,
+) => {
   //const filesToRead = getsFilesToUnderstandProject(data.files)
 
   const response = await openai.chat.completions.create({
@@ -53,7 +57,9 @@ export const generateReadmeWithGpt = async (data: Repository) => {
       ## 🚀 How to execute
       Provide detailed instructions on how to clone and run the project locally, using commands from the package.json.
       
-      Ignore title, and another information that is not related to the README.md file.
+      Ignore title, and another information that is not related to the README.md file. Translate the README.md file to ${
+        lang === 'en' ? 'English' : 'Portuguese'
+      }. Don't include the code block in the response.
       `,
       },
     ],

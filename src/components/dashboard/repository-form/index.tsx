@@ -12,38 +12,41 @@ import {
 } from '@/services/github/repositories'
 
 import { useState } from 'react'
-import { TooltipWrapper } from '@/components/tooltip-wrapper'
-import { CircleHelp } from 'lucide-react'
-import { Switch } from '@/components/ui/switch'
-import { Input } from '@/components/ui/input'
+
 import { toast } from 'sonner'
 import { useMarkdown } from '@/stores/markdown'
 import { generateReadme } from '@/services/generator'
+import { Dictionary } from '@/dictionaries/types'
+import { Locales } from '@/types/locales'
 
 type RepositoryFormProps = {
   repositoryInfo: Awaited<ReturnType<typeof getRepositoryByName>>
   languages: Awaited<ReturnType<typeof getRepositoryLanguages>>
+  dictionary: Dictionary['dashboardPage']
+  lang: Locales
 }
 
 export const RepositoryForm = ({
+  dictionary,
   languages,
   repositoryInfo,
+  lang,
 }: RepositoryFormProps) => {
   const { updateMarkdown } = useMarkdown()
   const [pending, setPending] = useState(false)
-  const [hasThumb, setHasThumb] = useState(false)
+  /* const [hasThumb, setHasThumb] = useState(false) */
 
   const schema = z.object({
     repositoryExcerpt: z
       .string()
-      .nonempty('Descrição do repositório é obrigatória'),
-    repositoryThumbUrl: hasThumb
+      .nonempty(dictionary.messageErrors.excerptRequired),
+    /* repositoryThumbUrl: hasThumb
       ? z
           .string({
-            message: 'Link do site do projeto é obrigatório',
+            message: dictionary.messageErrors.thumbRequired,
           })
-          .url('Link do site do projeto é obrigatório')
-      : z.string().optional().nullable(),
+          .url(dictionary.messageErrors.thumbRequired)
+      : z.string().optional().nullable(), */
   })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -57,7 +60,7 @@ export const RepositoryForm = ({
 
     const data = {
       repositoryExcerpt: formData.get('repository-excerpt') as string,
-      repositoryThumbUrl: formData.get('repository-thumb-url') as string,
+      /*  repositoryThumbUrl: formData.get('repository-thumb-url') as string, */
     }
 
     const parsedData = schema.safeParse(data)
@@ -70,6 +73,7 @@ export const RepositoryForm = ({
     }
 
     const markdownContent: string | null = await generateReadme({
+      lang,
       repository: {
         owner: repositoryInfo?.owner.login || '',
         languages: Object.keys(languages || {}) || [],
@@ -90,25 +94,30 @@ export const RepositoryForm = ({
       {/* Repositório: Informações Gerais */}
       <div className="rounded-md border bg-gray-100 p-4 shadow-sm">
         <h2 className="mb-4 text-lg font-medium text-gray-800">
-          Informações do Repositório
+          {dictionary.repositoryForm.title}
         </h2>
+
         <div className="grid gap-3 text-sm">
           <div className="flex gap-2">
-            <p className="font-semibold text-gray-700">Nome do repositório:</p>
+            <p className="font-semibold text-gray-700">
+              {dictionary.repositoryForm.repoInfo.name}
+            </p>
             <p id="repository-name" className="text-gray-500">
               {repositoryInfo?.name}
             </p>
           </div>
           <div className="flex gap-2">
             <p className="font-semibold text-gray-700">
-              Descrição do repositório:
+              {dictionary.repositoryForm.repoInfo.description}
             </p>
             <p id="repository-description" className="text-gray-500">
               {repositoryInfo?.description || 'Sem descrição disponível.'}
             </p>
           </div>
           <div>
-            <Label htmlFor="repository-languages">Linguagens</Label>
+            <Label htmlFor="repository-languages">
+              {dictionary.repositoryForm.repoInfo.languages}
+            </Label>
             <div className="flex gap-4">
               {languages &&
                 Object.entries(languages).map(([language, percentage]) => (
@@ -159,7 +168,7 @@ export const RepositoryForm = ({
           htmlFor="repository-excerpt"
           className="mb-2 font-semibold text-gray-700"
         >
-          Descreva o repositório
+          {dictionary.repositoryForm.repositoryDescriptionLabel}
           <span className="text-red-500">*</span>
         </Label>
         <Textarea
@@ -167,16 +176,18 @@ export const RepositoryForm = ({
           id="repository-excerpt"
           name="repository-excerpt"
           className="min-h-[120px] w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          placeholder="Este repositório é um projeto que visa..."
+          placeholder={
+            dictionary.repositoryForm.repositoryDescriptionPlaceholder
+          }
         />
       </div>
 
-      <div className="flex flex-col gap-2">
+      {/* <div className="flex flex-col gap-2">
         <Label
           htmlFor="repository-visibility"
           className="flex items-center gap-2 font-semibold text-gray-700"
         >
-          Tirar print do site para thumbnail?
+          {dictionary.repositoryForm.repositoryThumbLabel}
           <TooltipWrapper content="Se ativado, nós iremos tirar um print da URL que você disponibilizar logo abaixo. Isso vai ajudar a deixar o seu repositório mais bonito!">
             <CircleHelp className="h-4 w-4 hover:text-zinc-500" />
           </TooltipWrapper>
@@ -189,7 +200,7 @@ export const RepositoryForm = ({
               htmlFor="repository-thumb-url"
               className="font-semibold text-gray-700"
             >
-              Link do site do projeto:
+              {dictionary.repositoryForm.repositoryThumbUrlLabel}
               <span className="text-red-500">*</span>
             </Label>
             <Input
@@ -198,19 +209,23 @@ export const RepositoryForm = ({
               name="repository-thumb-url"
               id="repository-thumb-url"
               className="w-full rounded-lg border p-2"
-              placeholder="https://example.com/"
+              placeholder={
+                dictionary.repositoryForm.repositoryThumbUrlPlaceholder
+              }
             />
           </div>
         )}
-      </div>
+      </div> */}
 
       {/* Botão de Envio */}
       <Button
         type="submit"
         disabled={pending}
-        className="self-end bg-indigo-600 hover:bg-indigo-700"
+        className="self-end bg-gray-700 hover:bg-gray-800"
       >
-        Gerar README
+        {pending
+          ? dictionary.repositoryForm.submittingButton
+          : dictionary.repositoryForm.submitButton}
       </Button>
     </form>
   )

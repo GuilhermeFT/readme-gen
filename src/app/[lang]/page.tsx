@@ -1,6 +1,8 @@
 import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import { getDictionary } from '@/dictionaries'
+import { cn } from '@/lib/utils'
+import { locales } from '@/middleware'
 
 import { Pages } from '@/types/pages'
 import Link from 'next/link'
@@ -11,9 +13,10 @@ export default async function Home({ params: { lang } }: Pages) {
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-b from-white via-gray-50 to-gray-100">
       {/* Header */}
-      <header className="flex w-full items-center justify-between bg-white/80 p-4 shadow-md backdrop-blur-md lg:px-8">
+      <header className="flex w-full items-center justify-between bg-white/80 p-4 backdrop-blur-md lg:px-8">
         <Logo className="text-xl md:text-2xl" />
-        {/* <nav className="ml-auto flex items-center gap-4">
+
+        <nav className="ml-auto flex items-center gap-4">
           {locales.map((locale) => (
             <Link
               key={locale}
@@ -28,7 +31,7 @@ export default async function Home({ params: { lang } }: Pages) {
               {locale.split('-')[0].toUpperCase()}
             </Link>
           ))}
-        </nav> */}
+        </nav>
       </header>
 
       {/* Hero Section */}

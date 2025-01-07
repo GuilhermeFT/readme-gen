@@ -109,27 +109,27 @@ body {
 }
 
 .visualizer h1 {
-  @apply my-4 text-4xl font-bold;
+  @apply my-4 text-3xl font-bold;
 }
 
 .visualizer h2 {
-  @apply my-3 text-3xl font-semibold;
+  @apply my-3 text-2xl font-semibold;
 }
 
 .visualizer h3 {
-  @apply my-2 text-2xl font-medium;
-}
-
-.visualizer h4 {
   @apply my-2 text-xl font-medium;
 }
 
+.visualizer h4 {
+  @apply my-2 text-lg font-medium;
+}
+
 .visualizer h5 {
-  @apply my-1 text-lg font-medium;
+  @apply my-1 text-base font-medium;
 }
 
 .visualizer h6 {
-  @apply my-1 text-base font-medium;
+  @apply my-1 text-sm font-medium;
 }
 
 .visualizer p {
