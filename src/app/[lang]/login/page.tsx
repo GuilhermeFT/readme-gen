@@ -18,10 +18,10 @@ export default async function Login({ params: { lang } }: Pages) {
 
   return (
     <div className="h-dvh w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="flex h-full items-center justify-center bg-zinc-100 py-12">
+      <div className="flex h-full items-center justify-center bg-zinc-950 py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <header className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold text-black">
+            <h1 className="text-3xl font-bold text-white">
               {dictionary.loginPage.title}
             </h1>
             <p className="text-pretty text-muted-foreground">
@@ -46,7 +46,7 @@ export default async function Login({ params: { lang } }: Pages) {
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-zinc-950 lg:flex lg:items-center lg:justify-center">
+      <div className="relative hidden bg-zinc-100 lg:flex lg:items-center lg:justify-center">
         <div className="absolute inset-0 left-0 top-0 z-10" />
         <Logo />
       </div>
