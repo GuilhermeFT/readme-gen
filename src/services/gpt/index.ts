@@ -4,8 +4,6 @@ import { getOpenAiInstance } from '@/lib/openai'
 import { Locales } from '@/types/locales'
 import { Repository } from '@/types/repositories'
 
-const openai = getOpenAiInstance()
-
 /* const getsFilesToUnderstandProject = async (fileList: string[]) => {
   const response = await openai.chat.completions.create({
     messages: [
@@ -35,6 +33,7 @@ export const generateReadmeWithGpt = async (
   data: Repository,
   lang: Locales,
 ) => {
+  const openai = getOpenAiInstance()
   //const filesToRead = getsFilesToUnderstandProject(data.files)
 
   const response = await openai.chat.completions.create({

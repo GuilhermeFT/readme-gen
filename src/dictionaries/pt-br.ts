@@ -71,6 +71,8 @@ const ptBR: Dictionary = {
     messageErrors: {
       excerptRequired: 'A descrição do repositório é obrigatória',
       thumbRequired: 'A URL da imagem de capa é obrigatória',
+      generic: 'Algo deu errado. Por favor, tente novamente.',
+      errorCodeOne: 'Estamos trabalhando nisso, tente novamente mais tarde.',
     },
   },
 }

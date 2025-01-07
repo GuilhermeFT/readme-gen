@@ -71,6 +71,8 @@ const en: Dictionary = {
     messageErrors: {
       excerptRequired: 'Repository description is required',
       thumbRequired: 'Cover image URL is required',
+      generic: 'Something went wrong. Please try again.',
+      errorCodeOne: 'We are working on it, please try again later.',
     },
   },
 }

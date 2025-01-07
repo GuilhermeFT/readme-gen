@@ -1,3 +1,5 @@
+'use server'
+
 import { Repository } from '@/types/repositories'
 import { generateReadmeWithGpt } from '../gpt'
 import { Locales } from '@/types/locales'
@@ -39,6 +41,11 @@ ${url ? `1. Clone o repositório (\`git clone ${url}\`);` : '1. Faça um fork do
 }
 
 export const generateReadme = async (options: GenerateReadmeOptions) => {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OpenAI API key is missing. Code: #1')
+  }
+  console.log('test', process.env.OPENAI_API_KEY)
+
   const result = await generateReadmeWithGpt(options.repository, options.lang)
 
   return `<h1 align="center">${options.repository.title}</h1>

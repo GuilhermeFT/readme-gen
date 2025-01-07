@@ -72,19 +72,31 @@ export const RepositoryForm = ({
       return
     }
 
-    const markdownContent: string | null = await generateReadme({
-      lang,
-      repository: {
-        owner: repositoryInfo?.owner.login || '',
-        languages: Object.keys(languages || {}) || [],
-        title: repositoryInfo?.name || '',
-        description: parsedData.data.repositoryExcerpt,
-        files: [],
-        url: repositoryInfo?.html_url || '',
-      },
-    })
+    try {
+      const markdownContent: string | null = await generateReadme({
+        lang,
+        repository: {
+          owner: repositoryInfo?.owner.login || '',
+          languages: Object.keys(languages || {}) || [],
+          title: repositoryInfo?.name || '',
+          description: parsedData.data.repositoryExcerpt,
+          files: [],
+          url: repositoryInfo?.html_url || '',
+        },
+      })
 
-    updateMarkdown(markdownContent || '')
+      updateMarkdown(markdownContent || '')
+    } catch (e) {
+      const error = e as Error
+
+      console.log(error.message)
+
+      if (error.message.includes('#1')) {
+        toast.error(dictionary.messageErrors.errorCodeOne)
+      } else {
+        toast.error(dictionary.messageErrors.generic)
+      }
+    }
 
     setPending(false)
   }

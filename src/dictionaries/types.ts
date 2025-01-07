@@ -60,6 +60,8 @@ export type Dictionary = {
     messageErrors: {
       excerptRequired: string
       thumbRequired: string
+      generic: string
+      errorCodeOne: string
     }
   }
 }
