@@ -1,4 +1,4 @@
-import { getGitHubInstance } from '..'
+import { getGitHubInstance } from '../../../lib/github'
 
 export const getUserInfo = async () => {
   const octokit = await getGitHubInstance()

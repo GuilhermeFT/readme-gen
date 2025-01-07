@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
-import { listAuthenticatedUserRepositories } from '@/services/github/repositories/list-repositories'
+import { listAuthenticatedUserRepositories } from '@/services/github/repositories'
+
 import Link from 'next/link'
 
 type RepositoryListProps = {

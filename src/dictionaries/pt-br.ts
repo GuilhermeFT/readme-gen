@@ -13,6 +13,8 @@ const ptBR: Dictionary = {
       'Gere automaticamente arquivos README.md profissionais para seus repositórios GitHub',
     buttonTitle: 'Começar',
     copyright: 'Todos os direitos reservados',
+
+    featuresTitle: 'Por que ReadmeGen?',
     features: [
       {
         title: 'Economize Tempo',

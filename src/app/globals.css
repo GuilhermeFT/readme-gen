@@ -103,3 +103,72 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.visualizer {
+  @apply flex flex-col gap-4;
+}
+
+.visualizer h1 {
+  @apply my-4 text-4xl font-bold;
+}
+
+.visualizer h2 {
+  @apply my-3 text-3xl font-semibold;
+}
+
+.visualizer h3 {
+  @apply my-2 text-2xl font-medium;
+}
+
+.visualizer h4 {
+  @apply my-2 text-xl font-medium;
+}
+
+.visualizer h5 {
+  @apply my-1 text-lg font-medium;
+}
+
+.visualizer h6 {
+  @apply my-1 text-base font-medium;
+}
+
+.visualizer p {
+  @apply my-2;
+}
+
+.visualizer a {
+  @apply text-primary underline;
+}
+
+.visualizer ul {
+  @apply my-2 list-disc pl-5;
+}
+
+.visualizer ol {
+  @apply my-2 list-decimal pl-5;
+}
+
+.visualizer blockquote {
+  @apply my-4 border-l-4 border-muted pl-4 italic;
+}
+
+.visualizer code {
+  @apply rounded bg-muted px-1 py-0.5 text-muted-foreground;
+}
+
+.visualizer pre {
+  @apply my-4 rounded bg-muted p-4 text-muted-foreground;
+}
+
+.visualizer table {
+  @apply my-4 w-full border-collapse;
+}
+
+.visualizer th,
+.visualizer td {
+  @apply border border-border px-4 py-2;
+}
+
+.visualizer th {
+  @apply bg-muted text-left;
+}

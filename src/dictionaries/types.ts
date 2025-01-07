@@ -10,6 +10,7 @@ export type Dictionary = {
     description: string
     buttonTitle: string
 
+    featuresTitle: string
     features: {
       title: string
       description: string
