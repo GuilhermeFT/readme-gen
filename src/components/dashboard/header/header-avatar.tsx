@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { getUserOnDB } from '@/services/faunadb'
 import { getUserInfo } from '@/services/github/user'
 import { getAvatarFallback } from '@/utils/text'
 

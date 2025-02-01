@@ -3,7 +3,6 @@
 import { ENV } from '@/env'
 import { abacateApi } from '@/lib/abacate'
 import { Product } from '@/types/products'
-import { User } from '@/types/user'
 import { AxiosError } from 'axios'
 import { getUserInfo } from '../github/user'
 

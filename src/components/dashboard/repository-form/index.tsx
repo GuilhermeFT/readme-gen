@@ -11,7 +11,7 @@ import {
   getRepositoryLanguages,
 } from '@/services/github/repositories'
 
-import { use, useState } from 'react'
+import { useState } from 'react'
 
 import { toast } from 'sonner'
 import { useMarkdown } from '@/stores/markdown'
