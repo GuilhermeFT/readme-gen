@@ -18,7 +18,7 @@ import { useMarkdown } from '@/stores/markdown'
 import { generateReadme } from '@/services/generator'
 import { Dictionary } from '@/dictionaries/types'
 import { Locales } from '@/types/locales'
-import { getUserOnDB } from '@/services/faunadb'
+import { getUserOnDB, updateUserOnDB } from '@/services/faunadb'
 import {
   Dialog,
   DialogDescription,
@@ -37,6 +37,7 @@ import {
 } from '@/components/ui/card'
 import { createPayment } from '@/services/abacate'
 import { getUserInfo } from '@/services/github/user'
+import { useRouter } from 'next/navigation'
 
 type RepositoryFormProps = {
   repositoryInfo: Awaited<ReturnType<typeof getRepositoryByName>>
@@ -58,6 +59,9 @@ export const RepositoryForm = ({
   user,
 }: RepositoryFormProps) => {
   const { updateMarkdown } = useMarkdown()
+
+  const router = useRouter()
+
   const [pending, setPending] = useState(false)
   const [openBuyModal, setOpenBuyModal] = useState(false)
 
@@ -81,8 +85,13 @@ export const RepositoryForm = ({
 
     setPending(true)
 
-    if (userDb?.credit || 0 <= 0) {
-      toast.error(dictionary.messageErrors.noCredit)
+    if (!user?.email) {
+      toast.error(dictionary.messageErrors.userNotFound)
+      setPending(false)
+      return
+    }
+
+    if ((userDb?.credit || 0) <= 0) {
       setOpenBuyModal(true)
       setPending(false)
       return
@@ -120,6 +129,13 @@ export const RepositoryForm = ({
       })
 
       updateMarkdown(markdownContent || '')
+
+      await updateUserOnDB({
+        email: user.email,
+        credit: (userDb?.credit || 0) - 1,
+      })
+
+      router.refresh()
     } catch (e) {
       const error = e as Error
 
@@ -270,15 +286,17 @@ export const RepositoryForm = ({
       </div> */}
 
         {/* Botão de Envio */}
-        <Button
-          type="submit"
-          disabled={pending}
-          className="self-end bg-gray-700 hover:bg-gray-800"
-        >
-          {pending
-            ? dictionary.repositoryForm.submittingButton
-            : dictionary.repositoryForm.submitButton}
-        </Button>
+        <footer className="flex justify-end gap-2">
+          <Button
+            type="submit"
+            disabled={pending}
+            className="self-end bg-gray-700 hover:bg-gray-800"
+          >
+            {pending
+              ? dictionary.repositoryForm.submittingButton
+              : dictionary.repositoryForm.submitButton}
+          </Button>
+        </footer>
       </form>
 
       <Dialog open={openBuyModal} onOpenChange={() => setOpenBuyModal(false)}>

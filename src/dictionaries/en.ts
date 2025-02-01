@@ -62,6 +62,8 @@ const en: Dictionary = {
       submitButton: 'Generate README',
       submittingButton: 'Generating README...',
 
+      saveOnGithub: 'Save on GitHub',
+
       repoInfo: {
         name: 'Repository Name:',
         description: 'Repository Description:',
@@ -84,6 +86,7 @@ const en: Dictionary = {
       generic: 'Something went wrong. Please try again.',
       errorCodeOne: 'We are working on it, please try again later.',
       noCredit: 'You do not have enough credit to generate READMEs',
+      userNotFound: 'User not found',
     },
   },
 }

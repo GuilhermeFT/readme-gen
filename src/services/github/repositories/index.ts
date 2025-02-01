@@ -1,3 +1,5 @@
+'use server'
+
 import { getGitHubInstance } from '../../../lib/github'
 
 export const listAuthenticatedUserRepositories = async () => {
@@ -115,4 +117,72 @@ export const getRepositoryFileByPath = async (repo: string, path: string) => {
   }
 
   return null
+}
+
+export const saveRepositoryFile = async (
+  repo: string,
+  path: string,
+  content: string,
+  message: string,
+) => {
+  const octokit = await getGitHubInstance()
+
+  if (!octokit) {
+    return null
+  }
+
+  const owner = await octokit.rest.users.getAuthenticated()
+
+  const { data: existingFile } = await octokit.rest.repos.getContent({
+    owner: owner.data.login,
+    repo,
+    path,
+  })
+
+  const sha = Array.isArray(existingFile) ? null : existingFile.sha
+
+  const { data } = await octokit.rest.repos.createOrUpdateFileContents({
+    owner: owner.data.login,
+    repo,
+    path,
+    message,
+    content: Buffer.from(content).toString('base64'),
+    sha: sha || undefined,
+  })
+
+  return data
+}
+
+export const getRepositoryFileContent = async (repo: string, path: string) => {
+  const octokit = await getGitHubInstance()
+
+  if (!octokit) {
+    return null
+  }
+
+  try {
+    const owner = await octokit.rest.users.getAuthenticated()
+
+    const { data } = await octokit.rest.repos.getContent({
+      owner: owner.data.login,
+      repo,
+      path,
+    })
+
+    if (Array.isArray(data)) {
+      if (data[0].type === 'file' && data[0].content) {
+        return Buffer.from(data[0].content, 'base64').toString('utf-8')
+      }
+
+      return null
+    }
+
+    if (data.type === 'file' && data.content) {
+      return Buffer.from(data.content, 'base64').toString('utf-8')
+    }
+
+    return null
+  } catch (error) {
+    return null
+  }
 }

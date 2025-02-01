@@ -54,6 +54,8 @@ export type Dictionary = {
 
       submitButton: string
       submittingButton: string
+
+      saveOnGithub: string
     }
 
     markdownEditor: {
@@ -73,6 +75,7 @@ export type Dictionary = {
       generic: string
       errorCodeOne: string
       noCredit: string
+      userNotFound: string
     }
   }
 }

@@ -1,3 +1,5 @@
+'use server'
+
 import { faunaClient } from '@/lib/faunadb'
 import { User } from '@/types/user'
 import { fql } from 'fauna'

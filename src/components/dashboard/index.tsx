@@ -1,5 +1,6 @@
 import {
   getRepositoryByName,
+  getRepositoryFileContent,
   getRepositoryFolderStructure,
   getRepositoryLanguages,
 } from '@/services/github/repositories'
@@ -33,12 +34,14 @@ const extFilesToIgnore = [
 ]
 
 export const DashboardWrapper = async ({ lang, repo }: DashboardProps) => {
-  const [repositoryInfo, languages, repoTree, user] = await Promise.all([
-    getRepositoryByName(repo),
-    getRepositoryLanguages(repo),
-    getRepositoryFolderStructure(repo),
-    getUserInfo(),
-  ])
+  const [repositoryInfo, languages, repoTree, user, gitReadme] =
+    await Promise.all([
+      getRepositoryByName(repo),
+      getRepositoryLanguages(repo),
+      getRepositoryFolderStructure(repo),
+      getUserInfo(),
+      getRepositoryFileContent(repo, 'README.md'),
+    ])
 
   const repositoryFiles: string[] =
     repoTree?.tree
@@ -52,7 +55,8 @@ export const DashboardWrapper = async ({ lang, repo }: DashboardProps) => {
 
   const dictionary = await getDictionary(lang)
   const userDb = await getUserOnDB(user?.email ?? undefined)
-  console.log(userDb)
+
+  console.log(gitReadme)
 
   return (
     <>
@@ -65,7 +69,12 @@ export const DashboardWrapper = async ({ lang, repo }: DashboardProps) => {
         userDb={userDb || undefined}
         user={user}
       />
-      <MarkdownEditor dictionary={dictionary.dashboardPage} />
+      <MarkdownEditor
+        dictionary={dictionary.dashboardPage}
+        repositoryInfo={repositoryInfo}
+        user={user}
+        gitReadme={gitReadme}
+      />
     </>
   )
 }

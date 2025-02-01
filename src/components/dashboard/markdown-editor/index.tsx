@@ -1,20 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MarkdownVisualizer } from './markdown-visualizer'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useMarkdown } from '@/stores/markdown'
 import { Dictionary } from '@/dictionaries/types'
 import { toast } from 'sonner'
+import { saveRepositoryFile } from '@/services/github/repositories'
+import { getUserInfo } from '@/services/github/user'
+import { getRepositoryByName } from '@/services/github/repositories'
+import { useRouter } from 'next/navigation'
 
 type MarkdownEditorProps = {
   dictionary: Dictionary['dashboardPage']
+  user?: Awaited<ReturnType<typeof getUserInfo>>
+  repositoryInfo: Awaited<ReturnType<typeof getRepositoryByName>>
+  gitReadme: string | null
 }
 
-export const MarkdownEditor = ({ dictionary }: MarkdownEditorProps) => {
+export const MarkdownEditor = ({
+  dictionary,
+  user,
+  repositoryInfo,
+  gitReadme,
+}: MarkdownEditorProps) => {
   const [isPreview, setIsPreview] = useState(true)
+  const [isUploading, setIsUploading] = useState(false)
   const { markdown, updateMarkdown } = useMarkdown()
+  const router = useRouter()
 
   const hasMarkdown = markdown.length > 10
 
@@ -41,6 +55,41 @@ export const MarkdownEditor = ({ dictionary }: MarkdownEditorProps) => {
 
     toast.success(dictionary.markdownEditor.downloadSuccess)
   }
+
+  const handleUpToGithub = async () => {
+    setIsUploading(true)
+    try {
+      if (!user || !repositoryInfo) {
+        toast.error(dictionary.messageErrors.userNotFound)
+        setIsUploading(false)
+        return
+      }
+
+      await saveRepositoryFile(
+        repositoryInfo.name,
+        'README.md',
+        markdown,
+        'Update README.md',
+      )
+
+      toast.success('README.md salvo no GitHub com sucesso!')
+      router.refresh()
+    } catch (e) {
+      const error = e as Error
+      toast.error(error.message)
+    }
+
+    setIsUploading(false)
+  }
+
+  useEffect(() => {
+    if (!gitReadme) {
+      updateMarkdown('')
+      return
+    }
+
+    updateMarkdown(gitReadme)
+  }, [gitReadme, updateMarkdown])
 
   return (
     <div className="mx-auto flex max-h-[86vh] w-full flex-col overflow-hidden rounded-lg border bg-gray-50 shadow-sm">
@@ -85,6 +134,14 @@ export const MarkdownEditor = ({ dictionary }: MarkdownEditorProps) => {
 
       {hasMarkdown && (
         <footer className="flex justify-end gap-2 bg-gray-100 p-2">
+          <Button
+            type="button"
+            onClick={handleUpToGithub}
+            disabled={isUploading}
+          >
+            {dictionary.repositoryForm.saveOnGithub}
+          </Button>
+
           <Button
             className="rounded-b-lg"
             variant="outline"

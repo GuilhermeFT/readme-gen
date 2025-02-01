@@ -61,6 +61,7 @@ const ptBR: Dictionary = {
       repositoryThumbUrlPlaceholder: 'Ex. https://example.com/image.jpg',
       submitButton: 'Gerar README',
       submittingButton: 'Gerando README...',
+      saveOnGithub: 'Salvar no GitHub',
 
       repoInfo: {
         name: 'Nome do Repositório:',
@@ -84,6 +85,7 @@ const ptBR: Dictionary = {
       generic: 'Algo deu errado. Por favor, tente novamente.',
       errorCodeOne: 'Estamos trabalhando nisso, tente novamente mais tarde.',
       noCredit: 'Você não tem créditos suficientes para gerar READMEs',
+      userNotFound: 'Usuário não encontrado',
     },
   },
 }
