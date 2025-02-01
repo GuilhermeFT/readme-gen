@@ -59,11 +59,18 @@ export const POST = async (req: Request) => {
   if (!buyedProduct) {
     return NextResponse.json({ message: 'Product not found' }, { status: 404 })
   }
+  console.log(
+    'User credit updating',
+    body.data.billing.customer.email,
+    buyedProduct.credit,
+  )
 
   await updateUserOnDB({
     email: body.data.billing.customer.email,
     credit: buyedProduct.credit,
   })
+
+  console.log('User credit updated')
 
   return NextResponse.json({ message: 'Payment callback received' })
 }
