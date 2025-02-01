@@ -28,10 +28,12 @@ interface Billing {
 }
 
 interface Customer {
-  name: string
-  cellphone: string
-  email: string
-  taxId: string
+  metadata: {
+    name: string
+    cellphone: string
+    email: string
+    taxId: string
+  }
 }
 
 interface Payment {
@@ -59,15 +61,9 @@ export const POST = async (req: Request) => {
   if (!buyedProduct) {
     return NextResponse.json({ message: 'Product not found' }, { status: 404 })
   }
-  console.log(
-    'User credit updating',
-    body.data.billing,
-    body.data.billing.customer,
-    buyedProduct.credit,
-  )
 
   await updateUserOnDB({
-    email: body.data.billing.customer.email,
+    email: body.data.billing.customer.metadata.email,
     credit: buyedProduct.credit,
   })
 
