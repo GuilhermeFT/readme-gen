@@ -46,9 +46,9 @@ export const DashboardHeader = async ({
         ))}
       </nav>
 
-      <div className="flex items-center gap-2">
-        <span className="font-bold">{dictionary.creditLabel}:</span>
-        <span className="font-medium">{dbUser?.credit}</span>
+      <div className="flex items-center gap-2 font-bold">
+        <span>{dictionary.creditLabel}:</span>
+        <span>{dbUser?.credit}</span>
       </div>
 
       <HeaderDropdown dictionary={dictionary}>

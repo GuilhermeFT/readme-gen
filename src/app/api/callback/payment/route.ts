@@ -28,10 +28,12 @@ interface Billing {
 }
 
 interface Customer {
-  name: string
-  cellphone: string
-  email: string
-  taxId: string
+  metadata: {
+    name: string
+    cellphone: string
+    email: string
+    taxId: string
+  }
 }
 
 interface Payment {
@@ -61,9 +63,11 @@ export const POST = async (req: Request) => {
   }
 
   await updateUserOnDB({
-    email: body.data.billing.customer.email,
+    email: body.data.billing.customer.metadata.email,
     credit: buyedProduct.credit,
   })
+
+  console.log('User credit updated')
 
   return NextResponse.json({ message: 'Payment callback received' })
 }
