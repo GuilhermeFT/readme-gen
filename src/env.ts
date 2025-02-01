@@ -10,6 +10,7 @@ const envSchema = z.object({
   APP_URL: z.string(),
 
   FAUNA_SECRET: z.string(),
+  WEBHOOK_SECRET: z.string(),
 })
 
 export const ENV = envSchema.parse(process.env)

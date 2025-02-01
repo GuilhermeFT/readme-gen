@@ -316,10 +316,7 @@ export const RepositoryForm = ({
                     onClick={async () => {
                       const url = await createPayment({ product, user })
 
-                      if (url) {
-                        window.open(url, '_blank')
-                        return
-                      }
+                      console.log(url)
                     }}
                     className="flex h-auto w-full flex-col py-2"
                   >
