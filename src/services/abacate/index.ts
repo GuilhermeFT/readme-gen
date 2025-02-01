@@ -32,9 +32,7 @@ export const createPayment = async ({ product, user }: CreatePaymentData) => {
       },
     })
 
-    console.log('Payment created:', data)
-
-    return data.url as string
+    return data.data.url as string
   } catch (e) {
     const error = e as AxiosError
 
