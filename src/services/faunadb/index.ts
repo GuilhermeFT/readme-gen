@@ -38,7 +38,7 @@ export const createUserOnDB = async (user: User) => {
 
 export const updateUserOnDB = async ({ credit, email }: User) => {
   try {
-    const query = fql`users.where(.email == ${email}).first().update({ credit: ${credit} })`
+    const query = fql`users.where(.email == ${email}).first()!.update({ credit: ${credit} })`
     const response = await faunaClient.query(query)
 
     return {
