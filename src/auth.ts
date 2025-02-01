@@ -16,7 +16,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     jwt({ token, account }) {
       if (account?.provider === 'github') {
-        return { ...token, accessToken: account.access_token }
+        return {
+          ...token,
+          accessToken: account.access_token,
+          refresh_token: account.refresh_token,
+          expire_in: account.expires_in,
+        }
       }
 
       return token
