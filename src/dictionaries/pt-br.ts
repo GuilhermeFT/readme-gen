@@ -40,7 +40,17 @@ const ptBR: Dictionary = {
     yourRepositories: 'Seus Repositórios',
     selectRepository: 'Selecione um repositório para começar',
 
+    logout: 'Sair',
+    creditLabel: 'Créditos',
+
     repositoryForm: {
+      modalBuy: {
+        title: 'Comprar Créditos',
+        description:
+          'Você não tem créditos suficientes para gerar READMEs. Gostaria de comprar mais?',
+        buttonBuy: 'Comprar Créditos',
+      },
+
       title: 'Informações do Repositório',
       repositoryDescriptionLabel: 'Descreva seu repositório',
       repositoryDescriptionPlaceholder:
@@ -73,6 +83,7 @@ const ptBR: Dictionary = {
       thumbRequired: 'A URL da imagem de capa é obrigatória',
       generic: 'Algo deu errado. Por favor, tente novamente.',
       errorCodeOne: 'Estamos trabalhando nisso, tente novamente mais tarde.',
+      noCredit: 'Você não tem créditos suficientes para gerar READMEs',
     },
   },
 }

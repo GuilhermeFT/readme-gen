@@ -90,3 +90,29 @@ export const getRepositoryFolderStructure = async (
 
   return data
 }
+
+export const getRepositoryFileByPath = async (repo: string, path: string) => {
+  const octokit = await getGitHubInstance()
+
+  if (!octokit) {
+    return null
+  }
+
+  const owner = await octokit.rest.users.getAuthenticated()
+
+  const { data } = await octokit.rest.repos.getContent({
+    owner: owner.data.login,
+    repo,
+    path,
+  })
+
+  if (Array.isArray(data)) {
+    return data.filter((file) => file.type === 'file')[0]
+  }
+
+  if (data.type === 'file') {
+    return data
+  }
+
+  return null
+}

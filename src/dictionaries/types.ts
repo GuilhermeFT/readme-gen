@@ -27,8 +27,18 @@ export type Dictionary = {
     yourRepositories: string
     selectRepository: string
 
+    logout: string
+    creditLabel: string
+
     repositoryForm: {
       title: string
+
+      modalBuy: {
+        title: string
+        description: string
+        buttonBuy: string
+      }
+
       repoInfo: {
         name: string
         description: string
@@ -62,6 +72,7 @@ export type Dictionary = {
       thumbRequired: string
       generic: string
       errorCodeOne: string
+      noCredit: string
     }
   }
 }

@@ -5,12 +5,22 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Locales } from '@/types/locales'
 
+import { HeaderDropdown } from './header-dropdown'
+import { getUserInfo } from '@/services/github/user'
+import { getUserOnDB } from '@/services/faunadb'
+
 type DashboardHeaderProps = {
   dictionary: Dictionary['dashboardPage']
   lang: Locales
 }
 
-export const DashboardHeader = ({ dictionary, lang }: DashboardHeaderProps) => {
+export const DashboardHeader = async ({
+  dictionary,
+  lang,
+}: DashboardHeaderProps) => {
+  const user = await getUserInfo()
+  const dbUser = await getUserOnDB(user?.email ?? undefined)
+
   return (
     <header className="flex h-16 items-center justify-between gap-4 border-b bg-white px-4 shadow-md lg:h-16 lg:px-6">
       <div className="flex flex-1 items-center">
@@ -36,7 +46,14 @@ export const DashboardHeader = ({ dictionary, lang }: DashboardHeaderProps) => {
         ))}
       </nav>
 
-      <HeaderAvatar />
+      <div className="flex items-center gap-2">
+        <span className="font-bold">{dictionary.creditLabel}:</span>
+        <span className="font-medium">{dbUser?.credit}</span>
+      </div>
+
+      <HeaderDropdown dictionary={dictionary}>
+        <HeaderAvatar user={user} />
+      </HeaderDropdown>
     </header>
   )
 }

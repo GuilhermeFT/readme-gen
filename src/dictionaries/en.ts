@@ -40,7 +40,17 @@ const en: Dictionary = {
     yourRepositories: 'Your Repositories',
     selectRepository: 'Select a repository to get started',
 
+    logout: 'Log out',
+
+    creditLabel: 'Credit',
+
     repositoryForm: {
+      modalBuy: {
+        title: 'Buy Credits',
+        description:
+          'You do not have enough credit to generate READMEs. Would you like to buy more?',
+        buttonBuy: 'Buy Credits',
+      },
       title: 'Repository Information',
       repositoryDescriptionLabel: 'Describe your repository',
       repositoryDescriptionPlaceholder:
@@ -73,6 +83,7 @@ const en: Dictionary = {
       thumbRequired: 'Cover image URL is required',
       generic: 'Something went wrong. Please try again.',
       errorCodeOne: 'We are working on it, please try again later.',
+      noCredit: 'You do not have enough credit to generate READMEs',
     },
   },
 }

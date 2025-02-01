@@ -9,7 +9,6 @@ import Link from 'next/link'
 
 export default async function Home({ params: { lang } }: Pages) {
   const dictionary = await getDictionary(lang)
-
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-b from-white via-gray-50 to-gray-100">
       {/* Header */}

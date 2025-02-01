@@ -6,9 +6,9 @@ import { auth } from '@/auth'
 export const locales: Locales[] = ['pt-br', 'en']
 const defaultLocale: Locales = 'pt-br'
 
-// Get the preferred locale, similar to the above or using a library
 function getLocale(request: NextRequest) {
   const acceptLanguage = request.headers.get('Accept-Language')
+
   if (!acceptLanguage) return defaultLocale
 
   const preferredLocales = acceptLanguage
@@ -26,6 +26,7 @@ function getLocale(request: NextRequest) {
 export const middleware = auth((request: NextRequest) => {
   // Check if there is any supported locale in the pathname
   const { pathname } = request.nextUrl
+
   const pathnameHasLocale =
     locales.some(
       (locale) =>
@@ -33,7 +34,9 @@ export const middleware = auth((request: NextRequest) => {
         pathname.toLowerCase() === `/${locale.toLowerCase()}`,
     ) && !pathname.toLowerCase().includes(defaultLocale)
 
-  if (pathnameHasLocale) return
+  if (pathnameHasLocale) {
+    return NextResponse.next()
+  }
 
   if (pathname.toLowerCase().includes(defaultLocale)) {
     request.nextUrl.pathname = request.nextUrl.pathname.replace(
@@ -45,22 +48,14 @@ export const middleware = auth((request: NextRequest) => {
   }
 
   const locale = getLocale(request)
-  request.nextUrl.pathname = `/${locale}${pathname}`
 
   if (locale === defaultLocale) {
+    request.nextUrl.pathname = `${defaultLocale}${pathname}`
     return NextResponse.rewrite(request.nextUrl)
   }
 
-  /*  if (locale === defaultLocale) {
-    request.nextUrl.pathname = request.nextUrl.pathname.replace(
-      `/${locale}`,
-      '',
-    )
-
-    return NextResponse.redirect(request.nextUrl)
-  } */
-
-  return NextResponse.redirect(request.nextUrl)
+  request.nextUrl.pathname = `/${defaultLocale}${pathname}`
+  return NextResponse.rewrite(request.nextUrl)
 })
 
 export const config = {
