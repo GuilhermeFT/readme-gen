@@ -7,6 +7,7 @@ export const products: Product[] = [
     name: 'Readme Generator',
     price: 6.9,
     quantity: 1,
+    credit: 10,
   },
   {
     externalId: '40278d15-d0bf-4d1d-96e1-a27a6f0ec1fc',
@@ -14,6 +15,7 @@ export const products: Product[] = [
     name: 'Readme Generator',
     price: 12.9,
     quantity: 1,
+    credit: 20,
   },
   {
     externalId: '53d6800c-b167-4bd3-8fa5-69b67707f8e5',
@@ -21,5 +23,6 @@ export const products: Product[] = [
     name: 'Readme Generator',
     price: 29.9,
     quantity: 1,
+    credit: 50,
   },
 ]

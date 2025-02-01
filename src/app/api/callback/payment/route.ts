@@ -1,8 +1,69 @@
+import { ENV } from '@/env'
+import { updateUserOnDB } from '@/services/faunadb'
+import { products } from '@/services/products'
+import { Product } from '@/types/products'
 import { NextResponse } from 'next/server'
 
+export interface WebhookResponse {
+  data: Data
+  devMode: boolean
+  event: string
+}
+
+interface Data {
+  billing: Billing
+  payment: Payment
+}
+
+interface Billing {
+  amount: number
+  couponsUsed: unknown[]
+  customer: Customer
+  frequency: string
+  id: string
+  kind: unknown[]
+  paidAmount: number
+  products: Product[]
+  status: string
+}
+
+interface Customer {
+  name: string
+  cellphone: string
+  email: string
+  taxId: string
+}
+
+interface Payment {
+  amount: number
+  fee: number
+  method: string
+}
+
 export const POST = async (req: Request) => {
-  const body = await req.json()
-  console.log('Payment callback received:', body)
+  const url = new URL(req.url)
+
+  if (url.searchParams.get('secret') !== ENV.WEBHOOK_SECRET) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+  }
+
+  const body = (await req.json()) as WebhookResponse
+
+  console.log('Webhook received:', body)
+
+  const buyedProduct = products.find(
+    (product) =>
+      product.externalId === body.data.billing.products.at(0)?.externalId,
+  )
+
+  if (!buyedProduct) {
+    return NextResponse.json({ message: 'Product not found' }, { status: 404 })
+  }
+
+  await updateUserOnDB({
+    email: body.data.billing.customer.email,
+    credit: buyedProduct.credit,
+  })
 
   return NextResponse.json({ message: 'Payment callback received' })
 }
