@@ -43,7 +43,7 @@ interface Payment {
 export const POST = async (req: Request) => {
   const url = new URL(req.url)
 
-  if (url.searchParams.get('secret') !== ENV.WEBHOOK_SECRET) {
+  if (url.searchParams.get('webhookSecret') !== ENV.WEBHOOK_SECRET) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
   }
 
