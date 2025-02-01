@@ -61,7 +61,7 @@ export const POST = async (req: Request) => {
   }
   console.log(
     'User credit updating',
-    body.data.billing.customer.email,
+    body.data,
     buyedProduct.credit,
   )
 
