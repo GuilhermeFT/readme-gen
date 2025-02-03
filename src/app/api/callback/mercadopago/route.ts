@@ -29,11 +29,11 @@ export const POST = async (req: Request) => {
       return handlePayment(body)
     }
 
-    return Response.json({ error: 'Webhook not processed' }, { status: 400 })
+    return Response.json({ received: 'Webhook not processed' })
   } catch (error) {
     console.error('Error processing webhook', error)
 
-    return Response.json({ error: 'Error processing webhook' }, { status: 400 })
+    return Response.json({ received: 'Error processing webhook' })
   }
 }
 
@@ -45,7 +45,7 @@ const handlePayment = async (webhook: Webhook) => {
     const paymentInfo = await payment.get({ id: paymentId })
 
     if (paymentInfo.status !== 'approved') {
-      return Response.json({ error: 'Payment not approved' }, { status: 400 })
+      return Response.json({ received: 'Payment not approved' })
     }
 
     const userEmail = paymentInfo.metadata.user
@@ -67,5 +67,5 @@ const handlePayment = async (webhook: Webhook) => {
     return Response.json({ message: 'Payment processed' })
   }
 
-  return Response.json({ error: 'Webhook not processed' }, { status: 400 })
+  return Response.json({ received: 'Webhook not processed' })
 }
