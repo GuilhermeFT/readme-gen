@@ -35,9 +35,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { createPayment } from '@/services/abacate'
 import { getUserInfo } from '@/services/github/user'
 import { useRouter } from 'next/navigation'
+import { createPreference } from '@/services/mercadopago'
 
 type RepositoryFormProps = {
   repositoryInfo: Awaited<ReturnType<typeof getRepositoryByName>>
@@ -116,6 +116,21 @@ export const RepositoryForm = ({
     }
 
     try {
+      const uDb = await getUserOnDB(user.email)
+
+      if (!uDb) {
+        toast.error(dictionary.messageErrors.userNotFound)
+        setPending(false)
+        return
+      }
+
+      if ((uDb?.credit || 0) <= 0) {
+        router.refresh()
+        setOpenBuyModal(true)
+        setPending(false)
+        return
+      }
+
       const markdownContent: string | null = await generateReadme({
         lang,
         repository: {
@@ -332,7 +347,7 @@ export const RepositoryForm = ({
                 <CardFooter className="bg-gray-100 p-4">
                   <Button
                     onClick={async () => {
-                      const url = await createPayment({ product, user })
+                      const url = await createPreference({ product, user })
 
                       if (url) {
                         window.location.href = url
