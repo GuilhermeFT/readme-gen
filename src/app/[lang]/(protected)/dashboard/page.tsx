@@ -54,7 +54,7 @@ export default async function Dashboard({
         <DashboardHeader dictionary={dictionary.dashboardPage} lang={lang} />
 
         {/* Main Section */}
-        <main className="grid flex-1 grid-cols-1 gap-6 p-6 xl:grid-cols-[550px_1fr]">
+        <main className="grid flex-1 grid-cols-1 gap-6 p-6 2xl:grid-cols-[550px_1fr]">
           {hasSelectedRepo ? (
             <Suspense key={repo} fallback={<DashboardSkeleton />}>
               <DashboardWrapper repo={repo} lang={lang} />
