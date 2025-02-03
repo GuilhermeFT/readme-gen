@@ -2,7 +2,6 @@ import { mpClient } from '@/lib/mercadopago'
 import { updateUserOnDB } from '@/services/faunadb'
 import { products } from '@/services/products'
 import { Payment } from 'mercadopago'
-import { NextResponse } from 'next/server'
 
 export interface Webhook {
   action: string
@@ -30,14 +29,11 @@ export const POST = async (req: Request) => {
       return handlePayment(body)
     }
 
-    return NextResponse.next()
+    return Response.json({ error: 'Webhook not processed' }, { status: 400 })
   } catch (error) {
     console.error('Error processing webhook', error)
 
-    return NextResponse.json(
-      { error: 'Error processing webhook' },
-      { status: 400 },
-    )
+    return Response.json({ error: 'Error processing webhook' }, { status: 400 })
   }
 }
 
@@ -47,6 +43,10 @@ const handlePayment = async (webhook: Webhook) => {
     const payment = new Payment(mpClient)
 
     const paymentInfo = await payment.get({ id: paymentId })
+
+    if (paymentInfo.status !== 'approved') {
+      return Response.json({ error: 'Payment not approved' }, { status: 400 })
+    }
 
     const userEmail = paymentInfo.metadata.user
     const productId = paymentInfo.metadata.product
@@ -64,8 +64,8 @@ const handlePayment = async (webhook: Webhook) => {
       credit: buyedProduct?.credit,
     })
 
-    return NextResponse.next()
+    return Response.json({ message: 'Payment processed' })
   }
 
-  return NextResponse.next()
+  return Response.json({ error: 'Webhook not processed' }, { status: 400 })
 }

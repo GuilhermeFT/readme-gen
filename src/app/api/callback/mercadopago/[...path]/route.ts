@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server'
 
 export interface Webhook {
   action: string
@@ -23,5 +22,5 @@ export const GET = async (req: Request) => {
 
   url.search = ''
 
-  return NextResponse.redirect(url.toString())
+  return Response.redirect(url.toString())
 }
