@@ -53,7 +53,7 @@ export const GET = async (req: Request) => {
 }
 
 const handlePayment = async (webhook: Webhook) => {
-  if (webhook.action === 'payment.created') {
+  if (webhook.action === 'payment.updated') {
     const paymentId = webhook.data.id
     const payment = new Payment(mpClient)
 
@@ -77,4 +77,6 @@ const handlePayment = async (webhook: Webhook) => {
 
     return NextResponse.next()
   }
+
+  return NextResponse.next()
 }
