@@ -46,7 +46,7 @@ export const createPreference = async ({
         failure: `${headers().get('origin')}/api/callback/mercadopago/failure`,
         pending: `${headers().get('origin')}/api/callback/mercadopago/pending`,
       },
-      notification_url: `https://f3b0-143-0-254-169.ngrok-free.app/api/callback/mercadopago`,
+      notification_url: `${headers().get('origin')}/api/callback/mercadopago`,
       payment_methods: {
         excluded_payment_methods: [
           {
