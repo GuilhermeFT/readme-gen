@@ -11,6 +11,10 @@ const envSchema = z.object({
 
   FAUNA_SECRET: z.string(),
   WEBHOOK_SECRET: z.string(),
+
+  MERCADO_PAGO_PUBLIC_KEY: z.string(),
+  MERCADO_PAGO_ACCESS_TOKEN: z.string(),
+  MERCADO_PAGO_WEBHOOK_SECRET: z.string(),
 })
 
 export const ENV = envSchema.parse(process.env)

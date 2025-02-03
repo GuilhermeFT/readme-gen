@@ -56,8 +56,6 @@ export const DashboardWrapper = async ({ lang, repo }: DashboardProps) => {
   const dictionary = await getDictionary(lang)
   const userDb = await getUserOnDB(user?.email ?? undefined)
 
-  console.log(gitReadme)
-
   return (
     <>
       <RepositoryForm
