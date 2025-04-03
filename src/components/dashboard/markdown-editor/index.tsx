@@ -133,7 +133,7 @@ export const MarkdownEditor = ({
       {isPreview && <MarkdownVisualizer markdown={markdown} />}
 
       {hasMarkdown && (
-        <footer className="flex flex-wrap justify-end gap-2 bg-gray-100 p-2">
+        <footer className="flex justify-end gap-2 bg-gray-100 p-2">
           <Button
             type="button"
             onClick={handleUpToGithub}

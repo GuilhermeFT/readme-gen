@@ -9,10 +9,19 @@ import { DashboardSkeleton } from '@/components/dashboard/skeleton'
 import { DashboardWrapper } from '@/components/dashboard'
 import { getDictionary } from '@/dictionaries'
 
-export default async function Dashboard({
-  params: { lang },
-  searchParams: { repo },
-}: Pages) {
+export default async function Dashboard(props: Pages) {
+  const searchParams = await props.searchParams;
+
+  const {
+    repo
+  } = searchParams;
+
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const hasSelectedRepo = Boolean(repo)
   const dictionary = await getDictionary(lang)
 

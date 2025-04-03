@@ -7,7 +7,13 @@ import { auth, signIn } from '@/auth'
 import { Logo } from '@/components/logo'
 import { redirect } from 'next/navigation'
 
-export default async function Login({ params: { lang } }: Pages) {
+export default async function Login(props: Pages) {
+  const params = await props.params;
+
+  const {
+    lang
+  } = params;
+
   const dictionary = await getDictionary(lang)
 
   const session = await auth()

@@ -1,37 +1,20 @@
+import { Header } from '@/components/header'
 import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import { getDictionary } from '@/dictionaries'
-import { cn } from '@/lib/utils'
-import { locales } from '@/middleware'
 
 import { Pages } from '@/types/pages'
 import Link from 'next/link'
 
-export default async function Home({ params: { lang } }: Pages) {
+export default async function Home(props: Pages) {
+  const params = await props.params
+
+  const { lang } = params
+
   const dictionary = await getDictionary(lang)
   return (
     <main className="flex min-h-screen flex-col bg-gradient-to-b from-white via-gray-50 to-gray-100">
-      {/* Header */}
-      <header className="flex w-full items-center justify-between bg-white/80 p-4 backdrop-blur-md lg:px-8">
-        <Logo className="text-xl md:text-2xl" />
-
-        <nav className="ml-auto flex items-center gap-4">
-          {locales.map((locale) => (
-            <Link
-              key={locale}
-              href={`/${locale}`}
-              className={cn(
-                'rounded-md px-4 py-2 text-sm font-medium transition',
-                lang === locale
-                  ? 'bg-primary text-white'
-                  : 'text-muted-foreground hover:text-primary',
-              )}
-            >
-              {locale.split('-')[0].toUpperCase()}
-            </Link>
-          ))}
-        </nav>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="flex flex-1 flex-col items-center justify-center px-4 text-center">

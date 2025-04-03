@@ -42,11 +42,11 @@ export const createPreference = async ({
       },
       auto_return: 'approved',
       back_urls: {
-        success: `${headers().get('origin')}/api/callback/mercadopago/approved`,
-        failure: `${headers().get('origin')}/api/callback/mercadopago/failure`,
-        pending: `${headers().get('origin')}/api/callback/mercadopago/pending`,
+        success: `${(await headers()).get('origin')}/api/callback/mercadopago/approved`,
+        failure: `${(await headers()).get('origin')}/api/callback/mercadopago/failure`,
+        pending: `${(await headers()).get('origin')}/api/callback/mercadopago/pending`,
       },
-      notification_url: `${headers().get('origin')}/api/callback/mercadopago`,
+      notification_url: `${(await headers()).get('origin')}/api/callback/mercadopago`,
       payment_methods: {
         excluded_payment_methods: [
           {
