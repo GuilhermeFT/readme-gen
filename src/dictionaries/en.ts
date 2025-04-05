@@ -1,4 +1,4 @@
-import { Dictionary } from './types'
+import { Dictionary } from '../lib/dictionary/types'
 
 const en: Dictionary = {
   loginPage: {

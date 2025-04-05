@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { FileText } from 'lucide-react'
 
 type LogoProps = {
   className?: string
@@ -6,14 +7,16 @@ type LogoProps = {
 
 export const Logo = ({ className }: LogoProps) => {
   return (
-    <span
+    <div
       className={cn(
-        'pointer-events-none text-center text-5xl font-bold text-muted-foreground',
+        'pointer-events-none flex items-center gap-2 text-center font-bold',
         className,
       )}
     >
-      <span className="text-primary"> Readme</span>
-      <span className="text-muted-foreground">Gen</span>
-    </span>
+      <FileText className="text-primary h-[1em] w-[1em]" />
+      <span className="font-bold">
+        Readme<span className="text-primary">Gen</span>
+      </span>
+    </div>
   )
 }

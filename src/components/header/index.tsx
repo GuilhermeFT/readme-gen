@@ -1,46 +1,73 @@
+import { cn } from '@/lib/utils'
+import { locales } from '@/middleware'
 import { FileText } from 'lucide-react'
 import Link from 'next/link'
+import { Button } from '../ui/button'
+import { getDictionary } from '@/lib/dictionary'
+import { MobileMenu } from './mobile-menu'
+import { Locales } from '@/types/locales'
 
-export const Header = () => {
+type HeaderProps = {
+  lang: Locales
+}
+
+export const Header = async ({ lang }: HeaderProps) => {
+  const dict = await getDictionary(lang)
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="supports-backdrop-filter:bg-background/60 bg-background/95 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
-          <FileText className="h-6 w-6 text-primary" />
+          <FileText className="text-primary h-6 w-6" />
           <span className="text-xl font-bold">
             Readme<span className="text-primary">Gen</span>
           </span>
         </div>
+
         <nav className="flex items-center gap-4">
-          <Link
-            href="#features"
-            className="text-sm font-medium hover:text-primary"
-          >
-            Recursos
-          </Link>
-          <Link
-            href="#how-it-works"
-            className="text-sm font-medium hover:text-primary"
-          >
-            Como Funciona
-          </Link>
-          <Link href="#faq" className="text-sm font-medium hover:text-primary">
-            FAQ
-          </Link>
-          <div className="flex items-center gap-2 overflow-hidden rounded-md border">
+          <div className="hidden items-center gap-4 md:flex">
             <Link
-              href="?lang=pt"
-              className="bg-primary px-2.5 py-1.5 text-xs font-medium text-primary-foreground"
+              href="#features"
+              className="hover:text-primary text-sm font-medium"
             >
-              PT
+              Recursos
             </Link>
             <Link
-              href="?lang=en"
-              className="px-2.5 py-1.5 text-xs font-medium hover:bg-muted"
+              href="#how-it-works"
+              className="hover:text-primary text-sm font-medium"
             >
-              EN
+              Como Funciona
+            </Link>
+            <Link
+              href="#faq"
+              className="hover:text-primary text-sm font-medium"
+            >
+              FAQ
             </Link>
           </div>
+
+          <div className="flex items-center gap-2 overflow-hidden rounded-md border">
+            {locales.map((locale) => (
+              <Link
+                key={locale}
+                href={`/${locale}`}
+                className={cn(
+                  'bg-muted text-primary-foreground px-2.5 py-1.5 text-xs font-medium',
+                  lang === locale
+                    ? 'bg-primary text-white'
+                    : 'text-muted-foreground hover:text-primary',
+                )}
+              >
+                {locale.split('-')[0].toUpperCase()}
+              </Link>
+            ))}
+          </div>
+
+          <MobileMenu dict={dict.header} />
+
+          <Button size="sm" className="hidden md:inline-flex">
+            Começar Agora
+          </Button>
         </nav>
       </div>
     </header>
