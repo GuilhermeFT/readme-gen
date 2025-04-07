@@ -65,9 +65,11 @@ export const Header = async ({ lang }: HeaderProps) => {
 
           <MobileMenu dict={dict.header} />
 
-          <Button size="sm" className="hidden md:inline-flex">
-            Começar Agora
-          </Button>
+          <Link href={`/${lang}/login`}>
+            <Button size="sm" className="hidden md:inline-flex">
+              Começar Agora
+            </Button>
+          </Link>
         </nav>
       </div>
     </header>

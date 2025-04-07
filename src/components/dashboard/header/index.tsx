@@ -1,13 +1,15 @@
-import { Dictionary } from '@/dictionaries/types'
 import { HeaderAvatar } from './header-avatar'
-import { locales } from '@/middleware'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
+
 import { Locales } from '@/types/locales'
 
 import { HeaderDropdown } from './header-dropdown'
 import { getUserInfo } from '@/services/github/user'
 import { getUserOnDB } from '@/services/faunadb'
+import { Button } from '@/components/ui/button'
+import { HelpCircle } from 'lucide-react'
+
+import { HeaderLanguage } from './header-language'
+import { Dictionary } from '@/types/dictionary'
 
 type DashboardHeaderProps = {
   dictionary: Dictionary['dashboardPage']
@@ -22,38 +24,30 @@ export const DashboardHeader = async ({
   const dbUser = await getUserOnDB(user?.email ?? undefined)
 
   return (
-    <header className="flex h-16 items-center justify-between gap-4 border-b bg-white px-4 shadow-md lg:h-16 lg:px-6">
-      <div className="flex flex-1 items-center">
-        <h1 className="text-lg font-medium text-gray-700 md:text-xl">
-          {dictionary.title}
-        </h1>
+    <header className="bg-background sticky top-0 z-30 flex h-16 items-center gap-4 border-b px-6">
+      <div className="flex flex-1 items-center justify-end gap-4">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm">
+            <span className="font-medium">Créditos:</span>
+            <span>8</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" className="rounded-full">
+              <HelpCircle className="h-4 w-4" />
+              <span className="sr-only">Ajuda</span>
+            </Button>
+          </div>
+
+          <HeaderLanguage lang={lang} />
+
+          <HeaderDropdown dict={dictionary} user={user}>
+            <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+              <HeaderAvatar user={user} />
+            </Button>
+          </HeaderDropdown>
+        </div>
       </div>
-
-      <nav className="ml-auto flex items-center gap-4">
-        {locales.map((locale) => (
-          <Link
-            key={locale}
-            href={`/${locale}/dashboard`}
-            className={cn(
-              'rounded-md px-4 py-2 text-sm font-medium transition',
-              lang === locale
-                ? 'bg-primary text-white'
-                : 'text-muted-foreground hover:text-primary',
-            )}
-          >
-            {locale.split('-')[0].toUpperCase()}
-          </Link>
-        ))}
-      </nav>
-
-      <div className="flex items-center gap-2 font-bold">
-        <span>{dictionary.creditLabel}:</span>
-        <span>{dbUser?.credit}</span>
-      </div>
-
-      <HeaderDropdown dictionary={dictionary}>
-        <HeaderAvatar user={user} />
-      </HeaderDropdown>
     </header>
   )
 }

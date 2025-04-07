@@ -5,7 +5,7 @@ import { MarkdownVisualizer } from './markdown-visualizer'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useMarkdown } from '@/stores/markdown'
-import { Dictionary } from '@/dictionaries/types'
+import { Dictionary } from '@/lib/dictionary/types'
 import { toast } from 'sonner'
 import { saveRepositoryFile } from '@/services/github/repositories'
 import { getUserInfo } from '@/services/github/user'
@@ -92,7 +92,7 @@ export const MarkdownEditor = ({
   }, [gitReadme, updateMarkdown])
 
   return (
-    <div className="mx-auto flex max-h-[86vh] w-full flex-col overflow-hidden rounded-lg border bg-gray-50 shadow-sm">
+    <div className="mx-auto flex max-h-[86vh] w-full flex-col overflow-hidden rounded-lg border bg-gray-50 shadow-xs">
       {/* Header */}
       <header className="flex items-center justify-between border-b bg-gray-100 p-4">
         <span className="text-lg font-semibold text-gray-700">README.md</span>
@@ -101,7 +101,7 @@ export const MarkdownEditor = ({
             onClick={() => setIsPreview(true)}
             variant="outline"
             className={cn(
-              'w-24 rounded-br-none rounded-tr-none',
+              'w-24 rounded-tr-none rounded-br-none',
 
               isPreview && 'bg-white',
             )}
@@ -112,7 +112,7 @@ export const MarkdownEditor = ({
             onClick={() => setIsPreview(false)}
             variant="outline"
             className={cn(
-              'w-24 rounded-bl-none rounded-tl-none',
+              'w-24 rounded-tl-none rounded-bl-none',
               !isPreview && 'bg-white',
             )}
           >
@@ -126,7 +126,7 @@ export const MarkdownEditor = ({
           value={markdown}
           placeholder="Write your markdown here..."
           onChange={(e) => updateMarkdown(e.target.value)}
-          className="flex-1 resize-none bg-gray-50 p-4 text-sm text-gray-700 outline-none"
+          className="flex-1 resize-none bg-gray-50 p-4 text-sm text-gray-700 outline-hidden"
         ></textarea>
       )}
 

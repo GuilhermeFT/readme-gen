@@ -163,10 +163,26 @@ const defaultLocaleDict = {
       },
     },
 
+    sidebar: {
+      home: 'Início',
+      settings: 'Configurações',
+      helpSupport: 'Ajuda & Suporte',
+    },
+
+    repositoryList: {
+      title: 'Seus Repositórios',
+      loading: 'Carregando repositórios...',
+      noRepositories: 'Nenhum repositório encontrado',
+      selected: 'Selecionado',
+      refreshRepositories: 'Atualizar lista de repositórios',
+    },
+
     desktopOnly: 'Use no desktop para uma melhor experiência',
     title: 'Painel de Controle',
     yourRepositories: 'Seus Repositórios',
     selectRepository: 'Selecione um repositório para começar',
+    selectRepositoryDescription:
+      'Selecione um repositório da lista para gerar um README personalizado.',
 
     logout: 'Sair',
     creditLabel: 'Créditos',

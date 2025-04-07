@@ -21,11 +21,12 @@ export default async function Login(props: Pages) {
   }
 
   return (
-    <div className="h-dvh w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
+    <div className="h-dvh w-full">
       <div className="bg-secondary flex h-full items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <header className="grid gap-2 text-center">
             <h1 className="text-3xl font-bold">{dictionary.loginPage.title}</h1>
+            <Logo className="mb-4 justify-center text-3xl" />
             <p className="text-muted-foreground text-pretty">
               {dictionary.loginPage.description}
             </p>
@@ -44,10 +45,6 @@ export default async function Login(props: Pages) {
             </form>
           </div>
         </div>
-      </div>
-      <div className="relative hidden bg-zinc-100 lg:flex lg:items-center lg:justify-center">
-        <div className="absolute inset-0 top-0 left-0 z-10" />
-        <Logo className="text-5xl" />
       </div>
     </div>
   )

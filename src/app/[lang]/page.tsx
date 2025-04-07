@@ -159,10 +159,12 @@ export default async function Home(props: Pages) {
               ))}
             </div>
             <div className="flex justify-center">
-              <Button size="lg" className="gap-2">
-                {dictionary.landingPage.howItWorks.callToAction}
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              <Link href={`/${lang}/login`}>
+                <Button size="lg" className="gap-2">
+                  {dictionary.landingPage.howItWorks.callToAction}
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
@@ -251,18 +253,23 @@ export default async function Home(props: Pages) {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button size="lg" variant="secondary" className="gap-2">
-                  {dictionary.landingPage.callToActionSection.buttonOne}
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 gap-2 bg-transparent"
-                >
-                  <Github className="h-4 w-4" />
-                  {dictionary.landingPage.callToActionSection.buttonTwo}
-                </Button>
+                <Link href={`/${lang}/login`}>
+                  <Button size="lg" variant="secondary" className="gap-2">
+                    {dictionary.landingPage.callToActionSection.buttonOne}
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+
+                <Link href={`/${lang}/login`}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10 gap-2 bg-transparent"
+                  >
+                    <Github className="h-4 w-4" />
+                    {dictionary.landingPage.callToActionSection.buttonTwo}
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
