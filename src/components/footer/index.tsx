@@ -9,7 +9,7 @@ type FooterProps = {
 export const Footer = ({ dict }: FooterProps) => {
   return (
     <footer className="bg-background w-full border-t py-6 md:py-8">
-      <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
+      <div className="container mx-auto flex flex-col items-center justify-between gap-4 md:flex-row">
         <div className="flex items-center gap-2">
           <FileText className="text-primary h-5 w-5" />
           <span className="text-lg font-semibold">

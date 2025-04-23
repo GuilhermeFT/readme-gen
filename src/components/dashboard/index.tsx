@@ -62,7 +62,7 @@ export const DashboardWrapper = async ({ lang, repo }: DashboardProps) => {
   const userDb = await getUserOnDB(user?.email ?? undefined)
 
   return (
-    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <div className="space-y-6">
         <Suspense fallback={<RepositoryDetailsSkeleton />}>
           <RepositoryDetails

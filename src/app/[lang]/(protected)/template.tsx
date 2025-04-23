@@ -1,4 +1,5 @@
 import { auth } from '@/auth'
+import { SidebarProvider } from '@/components/ui/sidebar'
 import { redirect } from 'next/navigation'
 
 type TemplateProps = {
@@ -12,5 +13,5 @@ export default async function Template({ children }: TemplateProps) {
     return redirect('/login')
   }
 
-  return children
+  return <SidebarProvider>{children}</SidebarProvider>
 }

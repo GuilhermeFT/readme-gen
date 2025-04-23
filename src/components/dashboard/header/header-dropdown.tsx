@@ -10,11 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Dictionary } from '@/lib/dictionary/types'
 
-import { LogOut, Settings, User } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { ReactElement } from 'react'
 import { getUserInfo } from '@/services/github/user'
+import { Dictionary } from '@/types/dictionary'
 
 type HeaderDropdownProps = {
   user: Awaited<ReturnType<typeof getUserInfo>>
@@ -47,7 +47,7 @@ export const HeaderDropdown = ({
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
+        {/*  <DropdownMenuItem>
           <User className="mr-2 h-4 w-4" />
           <span>{dict.header.dropdownItems.profile}</span>
         </DropdownMenuItem>
@@ -56,7 +56,7 @@ export const HeaderDropdown = ({
           <span>{dict.header.dropdownItems.settings}</span>
         </DropdownMenuItem>
 
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator /> */}
 
         <DropdownMenuItem
           onClick={() => {

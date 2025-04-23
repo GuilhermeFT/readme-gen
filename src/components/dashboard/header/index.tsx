@@ -4,12 +4,12 @@ import { Locales } from '@/types/locales'
 
 import { HeaderDropdown } from './header-dropdown'
 import { getUserInfo } from '@/services/github/user'
-import { getUserOnDB } from '@/services/faunadb'
 import { Button } from '@/components/ui/button'
-import { HelpCircle } from 'lucide-react'
 
 import { HeaderLanguage } from './header-language'
 import { Dictionary } from '@/types/dictionary'
+import { SidebarTrigger } from '@/components/ui/sidebar'
+import { Menu } from 'lucide-react'
 
 type DashboardHeaderProps = {
   dictionary: Dictionary['dashboardPage']
@@ -21,23 +21,26 @@ export const DashboardHeader = async ({
   lang,
 }: DashboardHeaderProps) => {
   const user = await getUserInfo()
-  const dbUser = await getUserOnDB(user?.email ?? undefined)
 
   return (
     <header className="bg-background sticky top-0 z-30 flex h-16 items-center gap-4 border-b px-6">
+      <div className="absolute top-3 left-4 z-40 md:hidden">
+        <SidebarTrigger>
+          <Button variant="outline" size="icon" className="rounded-full">
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle Menu</span>
+          </Button>
+        </SidebarTrigger>
+      </div>
+
       <div className="flex flex-1 items-center justify-end gap-4">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm">
-            <span className="font-medium">Créditos:</span>
-            <span>8</span>
-          </div>
-
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Button variant="outline" size="icon" className="rounded-full">
               <HelpCircle className="h-4 w-4" />
               <span className="sr-only">Ajuda</span>
             </Button>
-          </div>
+          </div> */}
 
           <HeaderLanguage lang={lang} />
 

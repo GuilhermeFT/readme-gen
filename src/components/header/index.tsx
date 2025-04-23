@@ -16,7 +16,7 @@ export const Header = async ({ lang }: HeaderProps) => {
 
   return (
     <header className="supports-backdrop-filter:bg-background/60 bg-background/95 sticky top-0 z-50 w-full border-b backdrop-blur-sm">
-      <div className="container flex h-16 items-center justify-between">
+      <div className="container mx-auto flex h-16 items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText className="text-primary h-6 w-6" />
           <span className="text-xl font-bold">

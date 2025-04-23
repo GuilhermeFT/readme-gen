@@ -1,10 +1,14 @@
+'use client'
+
 import { cn } from '@/lib/utils'
-import { listAuthenticatedUserRepositories } from '@/services/github/repositories'
-import { Github, Star, GitFork, History, Check } from 'lucide-react'
+import { Star, GitFork, History, Check } from 'lucide-react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
+import { Github } from '@/components/icons/github'
+import { listAuthenticatedUserRepositories } from '@/services/github/repositories/index'
 
 type RepositoryListProps = {
+  repositories: Awaited<ReturnType<typeof listAuthenticatedUserRepositories>>
   repoName?: string
   dictionary?: {
     title?: string
@@ -12,13 +16,24 @@ type RepositoryListProps = {
     noRepositories?: string
     selected?: string
   }
+  isLoading?: boolean
 }
 
-export const RepositoryList = async ({
+export const RepositoryList = ({
+  repositories,
   repoName,
   dictionary,
+  isLoading,
 }: RepositoryListProps) => {
-  const repositories = await listAuthenticatedUserRepositories()
+  console.log('repositories', repositories)
+
+  if (isLoading) {
+    return (
+      <div className="text-muted-foreground flex items-center justify-center py-8">
+        {dictionary?.loading || 'Loading repositories...'}
+      </div>
+    )
+  }
 
   if (!repositories || repositories.length === 0) {
     return (

@@ -21,7 +21,7 @@ export default async function Home(props: Pages) {
       <Header lang={lang} />
       <main className="flex min-h-screen flex-col bg-gradient-to-b from-white via-gray-50 to-gray-100">
         <section className="from-background to-muted w-full bg-gradient-to-b py-12 md:py-24 lg:py-32 xl:py-48">
-          <div className="container px-4 md:px-6">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
@@ -69,7 +69,7 @@ export default async function Home(props: Pages) {
           id="features"
           className="bg-background w-full py-12 md:py-24 lg:py-32"
         >
-          <div className="container px-4 md:px-6">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="bg-primary/10 text-primary inline-block rounded-lg px-3 py-1 text-sm">
@@ -131,7 +131,7 @@ export default async function Home(props: Pages) {
           id="how-it-works"
           className="bg-muted w-full py-12 md:py-24 lg:py-32"
         >
-          <div className="container px-4 md:px-6">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="bg-primary/10 text-primary inline-block rounded-lg px-3 py-1 text-sm">
@@ -170,7 +170,7 @@ export default async function Home(props: Pages) {
         </section>
 
         <section className="bg-background w-full border-t py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
               <div className="flex flex-col space-y-4">
                 <div className="space-y-2">
@@ -242,7 +242,7 @@ export default async function Home(props: Pages) {
         </section>
 
         <section className="bg-primary text-primary-foreground w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">

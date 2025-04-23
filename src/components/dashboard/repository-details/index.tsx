@@ -1,18 +1,12 @@
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { Github, Star, GitFork, Settings, Clock } from 'lucide-react'
+import { Star, GitFork, Clock } from 'lucide-react'
 import {
   getRepositoryByName,
   getRepositoryLanguages,
 } from '@/services/github/repositories'
 import { Dictionary } from '@/types/dictionary'
+import { Github } from '@/components/icons/github'
 
 type RepositoryDetailsProps = {
   repository: Awaited<ReturnType<typeof getRepositoryByName>>
@@ -31,47 +25,36 @@ export const RepositoryDetails = ({
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle>{dictionary?.repositoryForm?.title}</CardTitle>
-          <Button variant="ghost" size="sm" className="gap-1">
-            <Settings className="h-4 w-4" />
-            <span className="sr-only md:not-sr-only md:inline-flex">
-              {dictionary?.header?.dropdownItems.settings}
-            </span>
-          </Button>
+          <CardTitle>{dictionary.repositoryForm.title}</CardTitle>
         </div>
-        <CardDescription>
-          {dictionary?.repositoryForm?.repoInfo.description ||
-            'Detalhes e estatísticas do repositório selecionado'}
-        </CardDescription>
       </CardHeader>
+
       <CardContent className="space-y-4">
-        <div className="space-y-1">
+        <div className="flex items-center gap-2">
           <div className="text-sm font-medium">
-            {dictionary?.repositoryForm?.repoInfo.name ||
-              'Nome do Repositório:'}
+            {dictionary.repositoryForm.repoInfo.name}
           </div>
-          <div className="flex items-center gap-2">
-            <Github className="text-muted-foreground h-4 w-4" />
+          <div className="text-muted-foreground flex items-center gap-1 text-sm">
+            <Github className="h-4 w-4" />
             <span>{repository.name}</span>
           </div>
         </div>
 
-        <div className="space-y-1">
+        <div className="flex items-center gap-2 space-y-1">
           <div className="text-sm font-medium">
-            {dictionary?.repositoryForm?.repoInfo.description ||
-              'Descrição do Repositório:'}
+            {dictionary.repositoryForm.repoInfo.description}
           </div>
           <div className="text-muted-foreground text-sm">
             {repository.description !== null && repository.description !== ''
               ? repository.description
-              : 'Sem descrição disponível.'}
+              : '-'}
           </div>
         </div>
 
         {languages && Object.keys(languages).length > 0 && (
           <div className="space-y-2">
             <div className="text-sm font-medium">
-              {dictionary?.repositoryForm?.repoInfo.languages}
+              {dictionary.repositoryForm.repoInfo.languages}
             </div>
             <div className="grid grid-cols-1 gap-3">
               {Object.entries(languages).map(([lang, percentage]) => (
