@@ -1,6 +1,6 @@
 export const MarkdownEditorSkeleton = () => {
   return (
-    <div className="mx-auto flex w-full flex-col rounded-lg border shadow-sm">
+    <div className="mx-auto flex w-full flex-col rounded-lg border shadow-xs">
       <header className="flex items-center justify-between border-b bg-gray-100 p-4">
         <div className="h-6 w-28 animate-pulse rounded bg-gray-200 text-lg font-semibold" />
 

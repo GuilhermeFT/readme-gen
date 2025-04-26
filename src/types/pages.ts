@@ -1,8 +1,8 @@
 import { Locales } from './locales'
 
 export type Pages = {
-  params: { lang: Locales }
-  searchParams: {
+  params: Promise<{ lang: Locales }>
+  searchParams: Promise<{
     repo: string
-  }
+  }>
 }

@@ -3,8 +3,8 @@ import { Locales } from './types/locales'
 
 import { auth } from '@/auth'
 
-export const locales: Locales[] = ['pt-br', 'en']
-const defaultLocale: Locales = 'pt-br'
+export const locales: Locales[] = ['pt-BR', 'en']
+export const defaultLocale: Locales = 'pt-BR'
 
 function getLocale(request: NextRequest) {
   const acceptLanguage = request.headers.get('Accept-Language')
@@ -13,7 +13,7 @@ function getLocale(request: NextRequest) {
 
   const preferredLocales = acceptLanguage
     .split(',')
-    .map((locale) => locale.split(';')[0].toLowerCase())
+    .map((locale) => locale.split(';')[0])
 
   for (const preferredLocale of preferredLocales) {
     if (locales.includes(preferredLocale as Locales))
@@ -38,7 +38,7 @@ export const middleware = auth((request: NextRequest) => {
     return NextResponse.next()
   }
 
-  if (pathname.toLowerCase().includes(defaultLocale)) {
+  if (pathname.includes(defaultLocale)) {
     request.nextUrl.pathname = request.nextUrl.pathname.replace(
       `/${defaultLocale}`,
       '',

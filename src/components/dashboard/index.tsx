@@ -6,10 +6,14 @@ import {
 } from '@/services/github/repositories'
 import { MarkdownEditor } from './markdown-editor'
 import { RepositoryForm } from './repository-form'
-import { getDictionary } from '@/dictionaries'
+import { getDictionary } from '@/lib/dictionary'
 import { Locales } from '@/types/locales'
 import { getUserInfo } from '@/services/github/user'
-import { getUserOnDB } from '@/services/faunadb'
+import { RepositoryDetails } from './repository-details'
+import { RepositoryDetailsSkeleton } from './repository-details/skeleton'
+import { RepositoryFormSkeleton } from './repository-form/skeleton'
+import { MarkdownEditorSkeleton } from './markdown-editor/skeleton'
+import { Suspense } from 'react'
 
 type DashboardProps = {
   repo: string
@@ -54,25 +58,38 @@ export const DashboardWrapper = async ({ lang, repo }: DashboardProps) => {
       ) || []
 
   const dictionary = await getDictionary(lang)
-  const userDb = await getUserOnDB(user?.email ?? undefined)
 
   return (
-    <>
-      <RepositoryForm
-        lang={lang}
-        languages={languages}
-        repositoryInfo={repositoryInfo}
-        repositoryFiles={repositoryFiles}
-        dictionary={dictionary.dashboardPage}
-        userDb={userDb || undefined}
-        user={user}
-      />
-      <MarkdownEditor
-        dictionary={dictionary.dashboardPage}
-        repositoryInfo={repositoryInfo}
-        user={user}
-        gitReadme={gitReadme}
-      />
-    </>
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      <div className="space-y-6">
+        <Suspense fallback={<RepositoryDetailsSkeleton />}>
+          <RepositoryDetails
+            repository={repositoryInfo}
+            languages={languages}
+            dictionary={dictionary.dashboardPage}
+          />
+        </Suspense>
+
+        <Suspense fallback={<RepositoryFormSkeleton />}>
+          <RepositoryForm
+            lang={lang}
+            languages={languages}
+            repositoryInfo={repositoryInfo}
+            repositoryFiles={repositoryFiles}
+            dictionary={dictionary.dashboardPage}
+            user={user}
+          />
+        </Suspense>
+      </div>
+
+      <Suspense fallback={<MarkdownEditorSkeleton />}>
+        <MarkdownEditor
+          dictionary={dictionary.dashboardPage}
+          repositoryInfo={repositoryInfo}
+          user={user}
+          gitReadme={gitReadme}
+        />
+      </Suspense>
+    </div>
   )
 }
