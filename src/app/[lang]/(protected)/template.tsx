@@ -9,6 +9,8 @@ type TemplateProps = {
 export default async function Template({ children }: TemplateProps) {
   const session = await auth()
 
+  console.log('session', session)
+
   if (!session) {
     return redirect('/login')
   }

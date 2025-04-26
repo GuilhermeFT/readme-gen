@@ -9,7 +9,6 @@ import { RepositoryForm } from './repository-form'
 import { getDictionary } from '@/lib/dictionary'
 import { Locales } from '@/types/locales'
 import { getUserInfo } from '@/services/github/user'
-import { getUserOnDB } from '@/services/faunadb'
 import { RepositoryDetails } from './repository-details'
 import { RepositoryDetailsSkeleton } from './repository-details/skeleton'
 import { RepositoryFormSkeleton } from './repository-form/skeleton'
@@ -59,10 +58,9 @@ export const DashboardWrapper = async ({ lang, repo }: DashboardProps) => {
       ) || []
 
   const dictionary = await getDictionary(lang)
-  const userDb = await getUserOnDB(user?.email ?? undefined)
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
       <div className="space-y-6">
         <Suspense fallback={<RepositoryDetailsSkeleton />}>
           <RepositoryDetails
@@ -79,7 +77,6 @@ export const DashboardWrapper = async ({ lang, repo }: DashboardProps) => {
             repositoryInfo={repositoryInfo}
             repositoryFiles={repositoryFiles}
             dictionary={dictionary.dashboardPage}
-            userDb={userDb || undefined}
             user={user}
           />
         </Suspense>

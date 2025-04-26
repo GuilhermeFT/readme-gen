@@ -1,24 +1,16 @@
 'use server'
 
 import { Repository } from '@/types/repositories'
-import { generateReadmeWithGpt } from '../gpt'
 import { Locales } from '@/types/locales'
-import { ENV } from '@/env'
+import { generateReadmeWithGroq } from '../groq'
+import { getLicenseForReadme } from '../licenses'
+import { licenses } from '@/utils/licenses'
 
 type GenerateReadmeOptions = {
   lang: Locales
-  hasThumb?: boolean
   repository: Repository
-}
-
-const getLicenseMD = (lang: Locales) => {
-  if (lang === 'en') {
-    return `## License 📄
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.`
-  }
-
-  return `## Licença 📄
-Este projeto é licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.`
+  license?: (typeof licenses)[number]['value']
+  includeContribution?: boolean
 }
 
 const getContributingMD = (lang: Locales, url?: string) => {
@@ -42,17 +34,20 @@ ${url ? `1. Clone o repositório (\`git clone ${url}\`);` : '1. Faça um fork do
 }
 
 export const generateReadme = async (options: GenerateReadmeOptions) => {
-  if (!ENV.OPENAI_API_KEY) {
-    throw new Error('OpenAI API key is missing. Code: #1')
+  const iaResult = await generateReadmeWithGroq(
+    options.repository,
+    options.lang,
+  )
+
+  let readmeContent = `<h1 align="center">${options.repository.title}</h1>\n\n${iaResult || ''}`
+
+  if (options.includeContribution) {
+    readmeContent += `\n\n${getContributingMD(options.lang, options.repository.url)}`
   }
 
-  const result = await generateReadmeWithGpt(options.repository, options.lang)
+  if (options.license) {
+    readmeContent += `\n\n${await getLicenseForReadme(options.license, options.lang)}`
+  }
 
-  return `<h1 align="center">${options.repository.title}</h1>
-
-${result}
-
-${getContributingMD(options.lang, options.repository.url)}
-
-${getLicenseMD(options.lang)}`
+  return readmeContent
 }

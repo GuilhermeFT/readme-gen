@@ -187,7 +187,9 @@ const en: Dictionary = {
       repositoryDescriptionLabel: 'Describe your repository',
       repositoryDescriptionPlaceholder:
         'Ex. This repository is a web application that allows users to create and share funny memes.',
-
+      languageLabel: 'Language',
+      licenseLabel: 'License',
+      includeContributionLabel: 'Include contribution section',
       repositoryThumbLabel: 'Add a cover image?',
       repositoryThumbUrlLabel: 'Cover image URL',
       repositoryThumbUrlPlaceholder: 'Ex. https://example.com/image.jpg',

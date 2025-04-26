@@ -5,12 +5,13 @@ import { MarkdownVisualizer } from './markdown-visualizer'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useMarkdown } from '@/stores/markdown'
-import { Dictionary } from '@/lib/dictionary/types'
 import { toast } from 'sonner'
 import { saveRepositoryFile } from '@/services/github/repositories'
 import { getUserInfo } from '@/services/github/user'
 import { getRepositoryByName } from '@/services/github/repositories'
 import { useRouter } from 'next/navigation'
+import { Copy } from 'lucide-react'
+import { Dictionary } from '@/types/dictionary'
 
 type MarkdownEditorProps = {
   dictionary: Dictionary['dashboardPage']
@@ -99,22 +100,15 @@ export const MarkdownEditor = ({
         <div className="flex">
           <Button
             onClick={() => setIsPreview(true)}
-            variant="outline"
-            className={cn(
-              'w-24 rounded-tr-none rounded-br-none',
-
-              isPreview && 'bg-white',
-            )}
+            variant={isPreview ? 'default' : 'outline'}
+            className={cn('w-24 rounded-tr-none rounded-br-none')}
           >
             {dictionary.markdownEditor.buttonPreview}
           </Button>
           <Button
             onClick={() => setIsPreview(false)}
-            variant="outline"
-            className={cn(
-              'w-24 rounded-tl-none rounded-bl-none',
-              !isPreview && 'bg-white',
-            )}
+            variant={isPreview ? 'outline' : 'default'}
+            className={cn('w-24 rounded-tl-none rounded-bl-none')}
           >
             {dictionary.markdownEditor.buttonCode}
           </Button>
@@ -133,8 +127,9 @@ export const MarkdownEditor = ({
       {isPreview && <MarkdownVisualizer markdown={markdown} />}
 
       {hasMarkdown && (
-        <footer className="flex justify-end gap-2 bg-gray-100 p-2">
+        <footer className="flex flex-wrap justify-end gap-2 bg-gray-100 p-2">
           <Button
+            variant="outline"
             type="button"
             onClick={handleUpToGithub}
             disabled={isUploading}
@@ -155,7 +150,7 @@ export const MarkdownEditor = ({
             variant="outline"
             onClick={handleCopy}
           >
-            {dictionary.markdownEditor.copyButton}
+            <Copy className="h-4 w-4" />
           </Button>
         </footer>
       )}

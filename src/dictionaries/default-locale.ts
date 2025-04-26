@@ -188,6 +188,9 @@ const defaultLocaleDict = {
     creditLabel: 'Créditos',
 
     repositoryForm: {
+      languageLabel: 'Idioma',
+      licenseLabel: 'Licença',
+      includeContributionLabel: 'Incluir seção de contribuição',
       modalBuy: {
         title: 'Comprar Créditos',
         description:
