@@ -3,9 +3,12 @@
 import { getOpenAiInstance } from '@/lib/openai'
 import { Locales } from '@/types/locales'
 import { Repository } from '@/types/repositories'
+import { getRepositoryFileByPath } from '../github/repositories'
 
-/* const getsFilesToUnderstandProject = async (fileList: string[]) => {
-  const response = await openai.chat.completions.create({
+const getsFilesToUnderstandProject = async (fileList: string[]) => {
+  const openAi = getOpenAiInstance()
+
+  const response = await openAi.chat.completions.create({
     messages: [
       {
         role: 'system',
@@ -16,36 +19,53 @@ import { Repository } from '@/types/repositories'
         role: 'user',
         content: `The repository contains the following files: ${fileList.join(
           ', ',
-        )}. Analyze the files and return a list of the most important files to send to another prompt to generate a README.md file. Separate the files with a comma and choose on MAX 1 file.`,
+        )}. Analyze the files and return a list of the most important files to send to another prompt to generate a README.md file. Separate the files with a comma and choose on MAX 1 file. Return the list in the format: file1, file2, file3.`,
       },
     ],
     model: 'gpt-4o-mini',
   })
+
+  console.log('getsFilesToUnderstandProject', response)
 
   return (
     response.choices[0].message.content
       ?.split(',')
       .map((file) => file.trim()) || []
   )
-} */
+}
 
 export const generateReadmeWithGpt = async (
   data: Repository,
   lang: Locales,
 ) => {
-  const openai = getOpenAiInstance()
-  //const filesToRead = getsFilesToUnderstandProject(data.files)
+  const openAi = getOpenAiInstance()
+  const filesToRead = await getsFilesToUnderstandProject(data.files)
+  const selectedFiles = await getRepositoryFileByPath(
+    data.title,
+    filesToRead[0],
+  )
 
-  const response = await openai.chat.completions.create({
-    messages: [
-      {
-        role: 'system',
-        content:
-          'You are an expert developer generating a structured README for a GitHub repository based on the provided information.',
-      },
-      {
-        role: 'user',
-        content: `The repository is owned by ${data.owner} and is called ${data.title}. The following description is provided: ${data.description}. The repository uses the following languages: ${data.languages.join(', ')}. Please create a professional and detailed README.md file. Use the following exclusively this format:
+  console.log('selectedFiles', selectedFiles)
+
+  if (selectedFiles && selectedFiles.content) {
+    const decodedContent = Buffer.from(selectedFiles.content, 'base64')
+      .toString('utf-8')
+      .replaceAll('\n', '')
+      .replaceAll('\r', '')
+      .trim()
+
+    console.log('filesToRead', decodedContent)
+
+    const response = await openAi.chat.completions.create({
+      messages: [
+        {
+          role: 'system',
+          content:
+            'You are an expert developer generating a structured README for a GitHub repository based on the provided information.',
+        },
+        {
+          role: 'user',
+          content: `The repository is owned by ${data.owner} and is called ${data.title}. The following description is provided: ${data.description}. The repository uses the following languages: ${data.languages.join(', ')}. The most important file in the repository is ${decodedContent}. Please create a professional and detailed README.md file. Use the following exclusively this format:
   
       ## 🔎 About the project
       Summarize the purpose and features of the project based on the provided description.
@@ -60,11 +80,15 @@ export const generateReadmeWithGpt = async (
         lang === 'en' ? 'English' : 'Portuguese'
       }. Don't include the code block in the response.
       `,
-      },
-    ],
-    model: 'gpt-4o-mini',
-    max_tokens: 1100,
-  })
+        },
+      ],
+      model: 'gpt-4o-mini',
+    })
 
-  return response.choices[0].message.content
+    console.log('generateReadmeWithGpt', response)
+
+    return response.choices[0].message.content
+  } else {
+    console.log('selectedFiles or selectedFiles.content is null or undefined')
+  }
 }

@@ -10,10 +10,18 @@ declare module 'next-auth' {
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub],
+  jwt: {
+    maxAge: 0.9 * 24 * 60 * 60, // 90% of 2 days
+  },
   callbacks: {
     jwt({ token, account }) {
       if (account?.provider === 'github') {
-        return { ...token, accessToken: account.access_token }
+        return {
+          ...token,
+          accessToken: account.access_token,
+          refresh_token: account.refresh_token,
+          expire_in: account.expires_in,
+        }
       }
 
       return token

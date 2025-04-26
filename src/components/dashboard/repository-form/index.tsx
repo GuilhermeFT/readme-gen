@@ -1,91 +1,115 @@
 'use client'
 
 import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Separator } from '@/components/ui/separator'
 import {
   getRepositoryByName,
   getRepositoryLanguages,
 } from '@/services/github/repositories'
 
-import { useState } from 'react'
-
 import { toast } from 'sonner'
 import { useMarkdown } from '@/stores/markdown'
 import { generateReadme } from '@/services/generator'
-import { Dictionary } from '@/dictionaries/types'
 import { Locales } from '@/types/locales'
+import { getUserInfo } from '@/services/github/user'
+import { useRouter } from 'next/navigation'
+import { Dictionary } from '@/types/dictionary'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
+import { licenses } from '@/utils/licenses'
+import { useFormStore } from '@/stores/form'
 
 type RepositoryFormProps = {
   repositoryInfo: Awaited<ReturnType<typeof getRepositoryByName>>
   languages: Awaited<ReturnType<typeof getRepositoryLanguages>>
+  repositoryFiles: string[]
   dictionary: Dictionary['dashboardPage']
   lang: Locales
+  user?: Awaited<ReturnType<typeof getUserInfo>>
 }
 
 export const RepositoryForm = ({
   dictionary,
   languages,
   repositoryInfo,
+  repositoryFiles,
   lang,
+  user,
 }: RepositoryFormProps) => {
   const { updateMarkdown } = useMarkdown()
-  const [pending, setPending] = useState(false)
-  /* const [hasThumb, setHasThumb] = useState(false) */
+  const { setLicense } = useFormStore()
+  const router = useRouter()
 
   const schema = z.object({
     repositoryExcerpt: z
       .string()
       .nonempty(dictionary.messageErrors.excerptRequired),
-    /* repositoryThumbUrl: hasThumb
-      ? z
-          .string({
-            message: dictionary.messageErrors.thumbRequired,
-          })
-          .url(dictionary.messageErrors.thumbRequired)
-      : z.string().optional().nullable(), */
+    language: z.enum(['pt-BR', 'en'] as const),
+    license: z.string().min(1, 'Please select a license'),
+    includeContribution: z.boolean(),
   })
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  type FormValues = z.infer<typeof schema>
 
-    setPending(true)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      repositoryExcerpt: '',
+      language: lang,
+      license: 'mit',
+      includeContribution: true,
+    },
+  })
 
-    const form = e.currentTarget
+  const includeContribution = watch('includeContribution')
+  const licenseValue = watch('license')
 
-    const formData = new FormData(form)
+  useEffect(() => {
+    setLicense(licenseValue)
+  }, [licenseValue, setLicense])
 
-    const data = {
-      repositoryExcerpt: formData.get('repository-excerpt') as string,
-      /*  repositoryThumbUrl: formData.get('repository-thumb-url') as string, */
-    }
-
-    const parsedData = schema.safeParse(data)
-
-    if (!parsedData.success) {
-      parsedData.error.errors.forEach((err) => toast.error(err.message))
-
-      setPending(false)
+  const onSubmit = async (data: FormValues) => {
+    if (!user?.email) {
+      toast.error(dictionary.messageErrors.userNotFound)
       return
     }
 
     try {
       const markdownContent: string | null = await generateReadme({
-        lang,
+        lang: data.language,
         repository: {
           owner: repositoryInfo?.owner.login || '',
           languages: Object.keys(languages || {}) || [],
           title: repositoryInfo?.name || '',
-          description: parsedData.data.repositoryExcerpt,
-          files: [],
+          description: data.repositoryExcerpt,
+          files: repositoryFiles.slice(0, 15),
           url: repositoryInfo?.html_url || '',
         },
+        license: data.license,
+        includeContribution: data.includeContribution,
       })
 
       updateMarkdown(markdownContent || '')
+
+      router.refresh()
     } catch (e) {
       const error = e as Error
 
@@ -95,84 +119,10 @@ export const RepositoryForm = ({
         toast.error(dictionary.messageErrors.generic)
       }
     }
-
-    setPending(false)
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      {/* Repositório: Informações Gerais */}
-      <div className="rounded-md border bg-gray-100 p-4 shadow-sm">
-        <h2 className="mb-4 text-lg font-medium text-gray-800">
-          {dictionary.repositoryForm.title}
-        </h2>
-
-        <div className="grid gap-3 text-sm">
-          <div className="flex gap-2">
-            <p className="font-semibold text-gray-700">
-              {dictionary.repositoryForm.repoInfo.name}
-            </p>
-            <p id="repository-name" className="text-gray-500">
-              {repositoryInfo?.name}
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <p className="font-semibold text-gray-700">
-              {dictionary.repositoryForm.repoInfo.description}
-            </p>
-            <p id="repository-description" className="text-gray-500">
-              {repositoryInfo?.description || 'Sem descrição disponível.'}
-            </p>
-          </div>
-          <div>
-            <Label htmlFor="repository-languages">
-              {dictionary.repositoryForm.repoInfo.languages}
-            </Label>
-            <div className="flex gap-4">
-              {languages &&
-                Object.entries(languages).map(([language, percentage]) => (
-                  <div
-                    key={language}
-                    className="flex flex-col items-center text-gray-500"
-                  >
-                    <span className="font-medium">{language}</span>
-                    <span className="text-xs">{percentage.toFixed(2)}%</span>
-                  </div>
-                ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* Seleção de Arquivo */}
-      {/* <div>
-        <Label
-          htmlFor="repository-folder-structure"
-          className="mb-2 flex items-center gap-2 font-semibold text-gray-700"
-        >
-          Selecione o arquivo de dependências
-          <span className="text-red-500">*</span>
-          <TooltipWrapper content="Selecione o arquivo que contém as dependências do seu projeto, como package.json.">
-            <CircleHelp className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-          </TooltipWrapper>
-        </Label>
-        <Select>
-          <SelectTrigger className="w-full">
-            <SelectValue placeholder="Exemplo: package.json" />
-          </SelectTrigger>
-          <SelectContent>
-            {folderStructure?.tree.map((file) => (
-              <SelectItem key={file.path} value={file.path || ''}>
-                {file.path}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div> */}
-
-      {/* Descrição do Repositório */}
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <div>
         <Label
           htmlFor="repository-excerpt"
@@ -182,61 +132,96 @@ export const RepositoryForm = ({
           <span className="text-red-500">*</span>
         </Label>
         <Textarea
-          area-required="true"
           id="repository-excerpt"
-          name="repository-excerpt"
-          className="min-h-[120px] w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          className="min-h-[120px] w-full rounded-md border-gray-300 shadow-xs focus:border-indigo-500 focus:ring-indigo-500"
           placeholder={
             dictionary.repositoryForm.repositoryDescriptionPlaceholder
           }
+          {...register('repositoryExcerpt')}
         />
+        {errors.repositoryExcerpt && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.repositoryExcerpt.message}
+          </p>
+        )}
       </div>
 
-      {/* <div className="flex flex-col gap-2">
+      <div>
         <Label
-          htmlFor="repository-visibility"
-          className="flex items-center gap-2 font-semibold text-gray-700"
+          htmlFor="language-selector"
+          className="mb-2 font-semibold text-gray-700"
         >
-          {dictionary.repositoryForm.repositoryThumbLabel}
-          <TooltipWrapper content="Se ativado, nós iremos tirar um print da URL que você disponibilizar logo abaixo. Isso vai ajudar a deixar o seu repositório mais bonito!">
-            <CircleHelp className="h-4 w-4 hover:text-zinc-500" />
-          </TooltipWrapper>
+          {dictionary.repositoryForm.languageLabel}
+          <span className="text-red-500">*</span>
         </Label>
-        <Switch id="airplane-mode" onCheckedChange={(e) => setHasThumb(e)} />
-
-        {hasThumb && (
-          <div className="ml-4 mt-4 flex flex-col gap-2">
-            <Label
-              htmlFor="repository-thumb-url"
-              className="font-semibold text-gray-700"
-            >
-              {dictionary.repositoryForm.repositoryThumbUrlLabel}
-              <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              aria-required="true"
-              type="url"
-              name="repository-thumb-url"
-              id="repository-thumb-url"
-              className="w-full rounded-lg border p-2"
-              placeholder={
-                dictionary.repositoryForm.repositoryThumbUrlPlaceholder
-              }
-            />
-          </div>
+        <Select
+          defaultValue={lang}
+          onValueChange={(value) => setValue('language', value as Locales)}
+        >
+          <SelectTrigger id="language-selector" className="w-full">
+            <SelectValue placeholder="Select a language" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="pt-BR">Portuguese</SelectItem>
+          </SelectContent>
+        </Select>
+        {errors.language && (
+          <p className="mt-1 text-sm text-red-500">{errors.language.message}</p>
         )}
-      </div> */}
+      </div>
 
-      {/* Botão de Envio */}
-      <Button
-        type="submit"
-        disabled={pending}
-        className="self-end bg-gray-700 hover:bg-gray-800"
-      >
-        {pending
-          ? dictionary.repositoryForm.submittingButton
-          : dictionary.repositoryForm.submitButton}
-      </Button>
+      <div>
+        <Label
+          htmlFor="license-selector"
+          className="mb-2 font-semibold text-gray-700"
+        >
+          {dictionary.repositoryForm.licenseLabel}
+          <span className="text-red-500">*</span>
+        </Label>
+        <Select
+          defaultValue="mit"
+          onValueChange={(value) => setValue('license', value)}
+        >
+          <SelectTrigger id="license-selector" className="w-full">
+            <SelectValue placeholder="Select a license" />
+          </SelectTrigger>
+          <SelectContent>
+            {licenses.map((license) => (
+              <SelectItem key={license.value} value={license.value}>
+                {license.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {errors.license && (
+          <p className="mt-1 text-sm text-red-500">{errors.license.message}</p>
+        )}
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="include-contribution"
+          checked={includeContribution}
+          onCheckedChange={(checked) =>
+            setValue('includeContribution', checked)
+          }
+        />
+        <Label
+          htmlFor="include-contribution"
+          className="font-semibold text-gray-700"
+        >
+          {dictionary.repositoryForm.includeContributionLabel}
+        </Label>
+      </div>
+
+      <footer className="flex justify-end gap-2">
+        <Button type="submit" disabled={isSubmitting} className="self-end">
+          {isSubmitting
+            ? dictionary.repositoryForm.submittingButton
+            : dictionary.repositoryForm.submitButton}
+        </Button>
+      </footer>
     </form>
   )
 }

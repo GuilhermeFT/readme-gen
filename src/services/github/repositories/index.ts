@@ -1,4 +1,25 @@
-import { getGitHubInstance } from '../../../lib/github'
+'use server'
+
+import { getGitHubInstance } from '@/lib/github'
+import { PromiseHandler } from '@/utils/try'
+
+export const getOwner = async () => {
+  const octokit = await getGitHubInstance()
+
+  if (!octokit) {
+    return null
+  }
+
+  const { data, success } = await PromiseHandler(async () =>
+    octokit.rest.users.getAuthenticated(),
+  )
+
+  if (!success || !data) {
+    return null
+  }
+
+  return data.data
+}
 
 export const listAuthenticatedUserRepositories = async () => {
   const octokit = await getGitHubInstance()
@@ -7,11 +28,17 @@ export const listAuthenticatedUserRepositories = async () => {
     return null
   }
 
-  const { data } = await octokit.rest.repos.listForAuthenticatedUser({
-    type: 'all',
-  })
+  const { data, success } = await PromiseHandler(async () =>
+    octokit.rest.repos.listForAuthenticatedUser({
+      type: 'all',
+    }),
+  )
 
-  return data
+  if (!success) {
+    return null
+  }
+
+  return data?.data
 }
 
 export const getRepositoryLanguages = async (repo: string) => {
@@ -21,20 +48,33 @@ export const getRepositoryLanguages = async (repo: string) => {
     return null
   }
 
-  const owner = await octokit.rest.users.getAuthenticated()
+  const owner = await getOwner()
 
-  const { data } = await octokit.rest.repos.listLanguages({
-    owner: owner.data.login,
-    repo,
-  })
+  if (!owner) {
+    return null
+  }
 
-  const languages = Object.keys(data)
+  const { data, success } = await PromiseHandler(async () =>
+    octokit.rest.repos.listLanguages({
+      owner: owner.login,
+      repo,
+    }),
+  )
 
-  const totalBytes = Object.values(data).reduce((acc, value) => acc + value, 0)
+  if (!success || !data) {
+    return null
+  }
+
+  const languages = Object.keys(data.data)
+
+  const totalBytes = Object.values(data.data).reduce(
+    (acc, value) => acc + value,
+    0,
+  )
 
   const languagesData = languages.reduce(
     (acc, language) => {
-      const bytes = data[language]
+      const bytes = data.data[language]
       const percentage = (bytes / totalBytes) * 100
 
       if (percentage < 1) {
@@ -59,14 +99,24 @@ export const getRepositoryByName = async (repo: string) => {
     return null
   }
 
-  const owner = await octokit.rest.users.getAuthenticated()
+  const owner = await getOwner()
 
-  const { data } = await octokit.rest.repos.get({
-    owner: owner.data.login,
-    repo,
-  })
+  if (!owner) {
+    return null
+  }
 
-  return data
+  const { data, success } = await PromiseHandler(async () =>
+    octokit.rest.repos.get({
+      owner: owner.login,
+      repo,
+    }),
+  )
+
+  if (!success || !data) {
+    return null
+  }
+
+  return data.data
 }
 
 export const getRepositoryFolderStructure = async (
@@ -79,14 +129,157 @@ export const getRepositoryFolderStructure = async (
     return null
   }
 
-  const owner = await octokit.rest.users.getAuthenticated()
+  const owner = await getOwner()
 
-  const { data } = await octokit.rest.git.getTree({
-    owner: owner.data.login,
-    repo,
-    tree_sha: 'HEAD',
-    recursive: String(all),
-  })
+  if (!owner) {
+    return null
+  }
 
-  return data
+  const { data, success } = await PromiseHandler(async () =>
+    octokit.rest.git.getTree({
+      owner: owner.login,
+      repo,
+      tree_sha: 'HEAD',
+      recursive: String(all),
+    }),
+  )
+
+  if (!success || !data) {
+    return null
+  }
+
+  return data.data
+}
+
+export const getRepositoryFileByPath = async (repo: string, path: string) => {
+  const octokit = await getGitHubInstance()
+
+  if (!octokit) {
+    return null
+  }
+
+  const owner = await getOwner()
+
+  if (!owner) {
+    return null
+  }
+
+  const { data, success } = await PromiseHandler(async () =>
+    octokit.rest.repos.getContent({
+      owner: owner.login,
+      repo,
+      path,
+    }),
+  )
+
+  if (!success || !data) {
+    return null
+  }
+
+  if (Array.isArray(data.data)) {
+    return data.data.filter((file) => file.type === 'file')[0]
+  }
+
+  if (data.data.type === 'file') {
+    return data.data
+  }
+
+  return null
+}
+
+export const saveRepositoryFile = async (
+  repo: string,
+  path: string,
+  content: string,
+  message: string,
+) => {
+  const octokit = await getGitHubInstance()
+
+  if (!octokit) {
+    return null
+  }
+
+  const owner = await getOwner()
+
+  if (!owner) {
+    return null
+  }
+
+  const { data, success } = await PromiseHandler(async () =>
+    octokit.rest.repos.getContent({
+      owner: owner.login,
+      repo,
+      path,
+    }),
+  )
+
+  if (!success || !data) {
+    return null
+  }
+
+  const existingFile = data.data
+
+  const sha = Array.isArray(existingFile) ? null : existingFile.sha
+
+  const { data: updatedFile, success: updatedFileSuccess } =
+    await PromiseHandler(async () =>
+      octokit.rest.repos.createOrUpdateFileContents({
+        owner: owner.login,
+        repo,
+        path,
+        message,
+        content: Buffer.from(content).toString('base64'),
+        sha: sha || undefined,
+      }),
+    )
+
+  if (!updatedFileSuccess || !updatedFile) {
+    return null
+  }
+
+  return updatedFile.data
+}
+
+export const getRepositoryFileContent = async (repo: string, path: string) => {
+  const octokit = await getGitHubInstance()
+
+  if (!octokit) {
+    return null
+  }
+
+  try {
+    const owner = await getOwner()
+
+    if (!owner) {
+      return null
+    }
+
+    const { data, success } = await PromiseHandler(async () =>
+      octokit.rest.repos.getContent({
+        owner: owner.login,
+        repo,
+        path,
+      }),
+    )
+
+    if (!success || !data) {
+      return null
+    }
+
+    if (Array.isArray(data.data)) {
+      if (data.data[0].type === 'file' && data.data[0].content) {
+        return Buffer.from(data.data[0].content, 'base64').toString('utf-8')
+      }
+
+      return null
+    }
+
+    if (data.data.type === 'file' && data.data.content) {
+      return Buffer.from(data.data.content, 'base64').toString('utf-8')
+    }
+
+    return null
+  } catch (error) {
+    return null
+  }
 }
