@@ -12,6 +12,9 @@ import { getRepositoryByName } from '@/services/github/repositories'
 import { useRouter } from 'next/navigation'
 import { Copy } from 'lucide-react'
 import { Dictionary } from '@/types/dictionary'
+import { CommitMessageModal } from '../commit-message-modal'
+import { getLicenseFileContent } from '@/services/licenses'
+import { useFormStore } from '@/stores/form'
 
 type MarkdownEditorProps = {
   dictionary: Dictionary['dashboardPage']
@@ -28,7 +31,9 @@ export const MarkdownEditor = ({
 }: MarkdownEditorProps) => {
   const [isPreview, setIsPreview] = useState(true)
   const [isUploading, setIsUploading] = useState(false)
+  const [isCommitModalOpen, setIsCommitModalOpen] = useState(false)
   const { markdown, updateMarkdown } = useMarkdown()
+  const { license } = useFormStore()
   const router = useRouter()
 
   const hasMarkdown = markdown.length > 10
@@ -57,7 +62,15 @@ export const MarkdownEditor = ({
     toast.success(dictionary.markdownEditor.downloadSuccess)
   }
 
-  const handleUpToGithub = async () => {
+  const handleOpenCommitModal = () => {
+    setIsCommitModalOpen(true)
+  }
+
+  const handleCloseCommitModal = () => {
+    setIsCommitModalOpen(false)
+  }
+
+  const handleSaveToGithub = async (commitMessage: string) => {
     setIsUploading(true)
     try {
       if (!user || !repositoryInfo) {
@@ -66,14 +79,33 @@ export const MarkdownEditor = ({
         return
       }
 
+      // Salvar o README.md
       await saveRepositoryFile(
         repositoryInfo.name,
         'README.md',
         markdown,
-        'Update README.md',
+        commitMessage,
       )
 
-      toast.success('README.md salvo no GitHub com sucesso!')
+      // Se tiver licença que não seja 'none', salvar o LICENSE.md
+      if (license && license !== 'none') {
+        try {
+          const licenseContent = await getLicenseFileContent(license)
+          if (licenseContent) {
+            await saveRepositoryFile(
+              repositoryInfo.name,
+              'LICENSE.md',
+              licenseContent,
+              commitMessage,
+            )
+          }
+        } catch (licenseError) {
+          console.error('Erro ao salvar licença:', licenseError)
+          toast.error('Erro ao salvar arquivo de licença.')
+        }
+      }
+
+      toast.success('Arquivos salvos no GitHub com sucesso!')
       router.refresh()
     } catch (e) {
       const error = e as Error
@@ -131,7 +163,7 @@ export const MarkdownEditor = ({
           <Button
             variant="outline"
             type="button"
-            onClick={handleUpToGithub}
+            onClick={handleOpenCommitModal}
             disabled={isUploading}
           >
             {dictionary.repositoryForm.saveOnGithub}
@@ -154,6 +186,13 @@ export const MarkdownEditor = ({
           </Button>
         </footer>
       )}
+
+      <CommitMessageModal
+        isOpen={isCommitModalOpen}
+        onClose={handleCloseCommitModal}
+        onConfirm={handleSaveToGithub}
+        defaultMessage="chore: add readme"
+      />
     </div>
   )
 }

@@ -27,8 +27,8 @@ export const getLicenseForReadme = async (
   }
 
   if (lang === 'en') {
-    return `This project is licensed under the [${licenseName}](license.md) license. See the LICENSE file for details.`
+    return `This project is licensed under the [${licenseName}](LICENSE.md) license. See the LICENSE file for details.`
   } else {
-    return `Este projeto está licenciado sob a licença [${licenseName}](license.md). Ver o arquivo LICENSE para detalhes.`
+    return `Este projeto está licenciado sob a licença [${licenseName}](LICENSE.md). Ver o arquivo LICENSE para detalhes.`
   }
 }

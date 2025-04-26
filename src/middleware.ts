@@ -37,7 +37,6 @@ export const middleware = auth((request: NextRequest) => {
   if (pathnameHasLocale) {
     return NextResponse.next()
   }
-  console.log(pathname)
 
   if (pathname.includes(defaultLocale)) {
     request.nextUrl.pathname = request.nextUrl.pathname.replace(

@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -28,6 +29,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { licenses } from '@/utils/licenses'
+import { useFormStore } from '@/stores/form'
 
 type RepositoryFormProps = {
   repositoryInfo: Awaited<ReturnType<typeof getRepositoryByName>>
@@ -47,6 +49,7 @@ export const RepositoryForm = ({
   user,
 }: RepositoryFormProps) => {
   const { updateMarkdown } = useMarkdown()
+  const { setLicense } = useFormStore()
   const router = useRouter()
 
   const schema = z.object({
@@ -77,6 +80,11 @@ export const RepositoryForm = ({
   })
 
   const includeContribution = watch('includeContribution')
+  const licenseValue = watch('license')
+
+  useEffect(() => {
+    setLicense(licenseValue)
+  }, [licenseValue, setLicense])
 
   const onSubmit = async (data: FormValues) => {
     if (!user?.email) {

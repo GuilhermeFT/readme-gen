@@ -20,11 +20,6 @@ const getsFilesToUnderstandProject = async (fileList: string[]) => {
     model: 'llama3-8b-8192',
   })
 
-  console.log(
-    'getsFilesToUnderstandProject',
-    response.choices[0].message.content,
-  )
-
   return (
     response.choices[0].message.content
       ?.split(',')
@@ -50,8 +45,6 @@ export const generateReadmeWithGroq = async (
       .replaceAll('\r', '')
       .trim()
 
-    console.log('filesToRead', decodedContent)
-
     const response = await groq.chat.completions.create({
       messages: [
         {
@@ -75,8 +68,6 @@ export const generateReadmeWithGroq = async (
       ],
       model: 'llama3-8b-8192',
     })
-
-    console.log('generateReadmeWithGroq', response)
 
     return response.choices[0].message.content
   } else {
