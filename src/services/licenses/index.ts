@@ -3,17 +3,20 @@
 import { Locales } from '@/types/locales'
 import { licenses } from '@/utils/licenses'
 
-import fs from 'fs'
+import { mit } from './mit'
+import { gnuGplV3 } from './gnu-glp-v3'
 
 export const getLicenseFileContent = async (
   license: (typeof licenses)[number]['value'],
 ) => {
-  const licenseFile = fs.readFileSync(
-    `./src/services/licenses/${license}.md`,
-    'utf8',
-  )
-
-  return licenseFile
+  switch (license) {
+    case 'mit':
+      return mit
+    case 'gnu-glp-v3':
+      return gnuGplV3
+    default:
+      return ''
+  }
 }
 
 export const getLicenseForReadme = async (
