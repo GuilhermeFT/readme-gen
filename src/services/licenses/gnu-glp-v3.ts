@@ -1,4 +1,4 @@
-                    GNU GENERAL PUBLIC LICENSE
+export const gnuGplV3 = `                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
 Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
@@ -653,11 +653,11 @@ If the program does terminal interaction, make it output a short
 notice like this when it starts in an interactive mode:
 
     <program>  Copyright (C) <year>  <name of author>
-    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
+    This program comes with ABSOLUTELY NO WARRANTY; for details type \`show w'.
     This is free software, and you are welcome to redistribute it
-    under certain conditions; type `show c' for details.
+    under certain conditions; type \`show c' for details.
 
-The hypothetical commands `show w' and `show c' should show the appropriate
+The hypothetical commands \`show w' and \`show c' should show the appropriate
 parts of the General Public License. Of course, your program's commands
 might be different; for a GUI interface, you would use an "about box".
 
@@ -672,3 +672,4 @@ may consider it more useful to permit linking proprietary applications with
 the library. If this is what you want to do, use the GNU Lesser General
 Public License instead of this License. But first, please read
 <https://www.gnu.org/licenses/why-not-lgpl.html>.
+`
